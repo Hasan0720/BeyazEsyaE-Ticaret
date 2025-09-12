@@ -1,0 +1,185 @@
+﻿@model IEnumerable<BeyazEsyaE_Ticaret.tbl_siparis>
+
+@{
+    ViewBag.Title = "Sipariş Yönetimi";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Sipariş Listesi</h2>
+    </div>
+
+    <!-- Toplam sipariş sayısı hesaplaması -->
+    <p class="text-muted mb-3">
+        Toplam sipariş: <strong>@(Model?.Count() ?? 0)</strong>
+    </p>
+
+    <!-- Tamamlanmayan sipariş sayısı hesaplama -->
+    <p class="text-muted mb-2">
+        Tamamlanmamış sipariş:
+        <strong>@(ViewBag.Tamamlanmayanlar.Count ?? 0)</strong>
+    </p>
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <strong><i class="fa-solid fa-hourglass-half"></i> Teslimat Süreci Devam Eden Siparişler</strong>
+        </div>
+        <!-- Tamamlanmayan siparişler tablosu -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped genel-tablo-stil">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>
+                            Müşteri
+                            <a href="@Url.Action("Index", new { sortColumnT = "musteri", sortDirT = ViewBag.SortColumnT == "musteri" && ViewBag.SortDirT == "asc" ? "desc" : (ViewBag.SortColumnT == "musteri" && ViewBag.SortDirT == "desc" ? "" : "asc"), sortColumnC = ViewBag.SortColumnC, sortDirC = ViewBag.SortDirC })"
+                               class="sort-btn @(ViewBag.SortColumnT == "musteri" ? ViewBag.SortDirT : "")"></a>
+                        </th>
+                        <th>Ürün(ler)</th>
+                        <th>
+                            Toplam Tutar
+                            <a href="@Url.Action("Index", new { sortColumnT = "toplamTutar", sortDirT = ViewBag.SortColumnT == "toplamTutar" && ViewBag.SortDirT == "asc" ? "desc" : (ViewBag.SortColumnT == "toplamTutar" && ViewBag.SortDirT == "desc" ? "" : "asc"), sortColumnC = ViewBag.SortColumnC, sortDirC = ViewBag.SortDirC })"
+                               class="sort-btn @(ViewBag.SortColumnT == "toplamTutar" ? ViewBag.SortDirT : "")"></a>
+                        </th>
+                        <th>
+                            Teslimat Adresi
+                            <a href="@Url.Action("Index", new { sortColumnT = "teslimatAdresi", sortDirT = ViewBag.SortColumnT == "teslimatAdresi" && ViewBag.SortDirT == "asc" ? "desc" : (ViewBag.SortColumnT == "teslimatAdresi" && ViewBag.SortDirT == "desc" ? "" : "asc"), sortColumnC = ViewBag.SortColumnC, sortDirC = ViewBag.SortDirC })"
+                               class="sort-btn @(ViewBag.SortColumnT == "teslimatAdresi" ? ViewBag.SortDirT : "")"></a>
+                        </th>
+                        <th>
+                            Tarih
+                            <a href="@Url.Action("Index", new { sortColumnT = "tarih", sortDirT = ViewBag.SortColumnT == "tarih" && ViewBag.SortDirT == "asc" ? "desc" : (ViewBag.SortColumnT == "tarih" && ViewBag.SortDirT == "desc" ? "" : "asc"), sortColumnC = ViewBag.SortColumnC, sortDirC = ViewBag.SortDirC })"
+                               class="sort-btn @(ViewBag.SortColumnT == "tarih" ? ViewBag.SortDirT : "")"></a>
+                        </th>
+                        <th>
+                            Durum
+                            <a href="@Url.Action("Index", new { sortColumnT = "durum", sortDirT = ViewBag.SortColumnT == "durum" && ViewBag.SortDirT == "asc" ? "desc" : (ViewBag.SortColumnT == "durum" && ViewBag.SortDirT == "desc" ? "" : "asc"), sortColumnC = ViewBag.SortColumnC, sortDirC = ViewBag.SortDirC })"
+                               class="sort-btn @(ViewBag.SortColumnT == "durum" ? ViewBag.SortDirT : "")"></a>
+                        </th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Tamamlanmayanlar == null || ViewBag.Tamamlanmayanlar.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">Henüz tamamlanmamış sipariş yok.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var siparis in ViewBag.Tamamlanmayanlar)
+                        {
+                            var urunListesi = new List<string>();
+                            foreach (var detay in siparis.tbl_siparisDetay)
+                            {
+                                urunListesi.Add(detay.tbl_urun.urun_adi + " (" + detay.adet + ")");
+                            }
+                            string urunMetni = string.Join("<br/>", urunListesi);
+
+                            <tr>
+                                <td>@siparis.siparis_ID</td>
+                                <td>@(siparis.tbl_kullanici.ad + " " + siparis.tbl_kullanici.soyad)</td>
+                                <td>@Html.Raw(urunMetni)</td>
+                                <td data-sort="@siparis.toplam_tutar.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                    @string.Format("{0:C}", siparis.toplam_tutar)
+                                </td>
+                                <td>@siparis.teslimat_adresi</td>
+                                <td data-sort="@(((DateTimeOffset)siparis.siparis_tarihi).ToUnixTimeMilliseconds())">
+                                    @siparis.siparis_tarihi.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                                <td>@siparis.tbl_siparisDurum.durum_adi</td>
+                                <td>
+                                    <a href="@Url.Action("SiparisDurumDuzenle", "Siparis", new { id = siparis.siparis_ID })" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-edit"></i> Durumu Güncelle
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tamamlanan sipariş saayısı hesaplama -->
+    <p class="text-muted mb-2">
+        Tamamlanmış sipariş:
+        <strong>@(ViewBag.Tamamlananlar.Count ?? 0)</strong>
+    </p>
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <strong><i class="fas fa-check-circle me-2"></i> Tamamlanan Siparişler</strong>
+        </div>
+        <!-- Tamamlanan siparişler tabllosu -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped genel-tablo-stil">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>
+                            Müşteri
+                            <a href="@Url.Action("Index", new { sortColumnC = "musteri", sortDirC = ViewBag.SortColumnC == "musteri" && ViewBag.SortDirC == "asc" ? "desc" : (ViewBag.SortColumnC == "musteri" && ViewBag.SortDirC == "desc" ? "" : "asc"), sortColumnT = ViewBag.SortColumnT, sortDirT = ViewBag.SortDirT })"
+                               class="sort-btn @(ViewBag.SortColumnC == "musteri" ? ViewBag.SortDirC : "")"></a>
+                        </th>
+                        <th>Ürün(ler)</th>
+                        <th>
+                            Toplam Tutar
+                            <a href="@Url.Action("Index", new { sortColumnC = "toplamTutar", sortDirC = ViewBag.SortColumnC == "toplamTutar" && ViewBag.SortDirC == "asc" ? "desc" : (ViewBag.SortColumnC == "toplamTutar" && ViewBag.SortDirC == "desc" ? "" : "asc"), sortColumnT = ViewBag.SortColumnT, sortDirT = ViewBag.SortDirT })"
+                               class="sort-btn @(ViewBag.SortColumnC == "toplamTutar" ? ViewBag.SortDirC : "")"></a>
+                        </th>
+                        <th>
+                            Teslimat Adresi
+                            <a href="@Url.Action("Index", new { sortColumnC = "teslimatAdresi", sortDirC = ViewBag.SortColumnC == "teslimatAdresi" && ViewBag.SortDirC == "asc" ? "desc" : (ViewBag.SortColumnC == "teslimatAdresi" && ViewBag.SortDirC == "desc" ? "" : "asc"), sortColumnT = ViewBag.SortColumnT, sortDirT = ViewBag.SortDirT })"
+                               class="sort-btn @(ViewBag.SortColumnC == "teslimatAdresi" ? ViewBag.SortDirC : "")"></a>
+                        </th>
+                        <th>
+                            Tarih
+                            <a href="@Url.Action("Index", new { sortColumnC = "tarih", sortDirC = ViewBag.SortColumnC == "tarih" && ViewBag.SortDirC == "asc" ? "desc" : (ViewBag.SortColumnC == "tarih" && ViewBag.SortDirC == "desc" ? "" : "asc"), sortColumnT = ViewBag.SortColumnT, sortDirT = ViewBag.SortDirT })"
+                               class="sort-btn @(ViewBag.SortColumnC == "tarih" ? ViewBag.SortDirC : "")"></a>
+                        </th>
+                        <th>
+                            Durum
+                            <a href="@Url.Action("Index", new { sortColumnC = "durum", sortDirC = ViewBag.SortColumnC == "durum" && ViewBag.SortDirC == "asc" ? "desc" : (ViewBag.SortColumnC == "durum" && ViewBag.SortDirC == "desc" ? "" : "asc"), sortColumnT = ViewBag.SortColumnT, sortDirT = ViewBag.SortDirT })"
+                               class="sort-btn @(ViewBag.SortColumnC == "durum" ? ViewBag.SortDirC : "")"></a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Tamamlananlar == null || ViewBag.Tamamlananlar.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Henüz tamamlanmış sipariş yok.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var siparis in ViewBag.Tamamlananlar)
+                        {
+                            var urunListesi = new List<string>();
+                            foreach (var detay in siparis.tbl_siparisDetay)
+                            {
+                                urunListesi.Add(detay.tbl_urun.urun_adi + " (" + detay.adet + ")");
+                            }
+                            string urunMetni = string.Join("<br/>", urunListesi);
+
+                            <tr>
+                                <td>@siparis.siparis_ID</td>
+                                <td>@(siparis.tbl_kullanici.ad + " " + siparis.tbl_kullanici.soyad)</td>
+                                <td>@Html.Raw(urunMetni)</td>
+                                <td data-sort="@siparis.toplam_tutar.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                    @string.Format("{0:C}", siparis.toplam_tutar)
+                                </td>
+                                <td>@siparis.teslimat_adresi</td>
+                                <td data-sort="@(((DateTimeOffset)siparis.siparis_tarihi).ToUnixTimeMilliseconds())">
+                                    @siparis.siparis_tarihi.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                                <td>@siparis.tbl_siparisDurum.durum_adi</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

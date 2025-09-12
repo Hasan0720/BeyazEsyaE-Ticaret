@@ -1,0 +1,145 @@
+﻿@model BeyazEsyaE_Ticaret.Models.UrunDetayViewModel
+@{
+    ViewBag.Title = "Ürün Detayı";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-5 urun-kart">
+        <img src="@Model.Urun.gorsel" class="img-fluid border rounded detay-gorsel " alt="@Model.Urun.urun_adi" onclick="openLightbox(this)" />
+    </div>
+
+    <div class="col-md-7 urun-kart">
+        <h2>@Model.Urun.urun_adi</h2>
+        <p><strong>Kategori:</strong> @Model.KategoriAdi</p>
+        <p><strong>Marka:</strong> @Model.MarkaAdi</p>
+        <p><strong>Model:</strong> @Model.ModelAdi</p>
+        <p><strong>Açıklama:</strong> @Model.Urun.aciklama</p>
+        <p class="fw-bold"><strong>Fiyat:</strong> @Model.Urun.fiyat ₺</p>
+        <p>
+            <strong>Stok:</strong>
+            @if (Model.StokAdedi == 0)
+            {
+                <span class="badge bg-danger text-white">Tükendi</span>
+            }
+            else if (Model.StokAdedi <= 10)
+            {
+                <span class="badge bg-warning text-dark">Tükeniyor son @Model.StokAdedi Ürün</span>
+            }
+            else
+            {
+                <span class="badge bg-success text-white">@Model.StokAdedi Ürün</span>
+            }
+        </p>
+
+        <hr class="my-5" />
+
+        <div class="d-flex align-items-center mt-3">
+            <input type="number" class="form-control me-2 adet-input" value="1" min="1" max="@(Model.StokAdedi < 2 ? Model.StokAdedi : 2)" data-stok="@Model.StokAdedi" />
+            @if (Session["kullaniciID"] != null)
+            {
+                <button class="btn btn-success w-75 sepete-ekle-btn"
+                        data-urun-id="@Model.Urun.urun_ID"
+                        data-stok="@Model.StokAdedi"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sepetSidebar">
+                    <i class="fa-solid fa-cart-plus"></i> Sepete Ekle
+                </button>
+            }
+            else
+            {
+                <a href="@Url.Action("Giris", "Giris")"
+                   class="btn btn-success w-75">
+                    <i class="fa-solid fa-cart-plus"></i> Sepete Ekle
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Satın alma ve teslimat bilgileri bölümü -->
+<hr class="my-5" />
+<h4 class="mb-3">Satın Alma ve Teslimat Bilgileri</h4>
+<div class="border p-4 bg-light rounded">
+    <ul class="list-unstyled">
+        <li><i class="fa-solid fa-arrow-right"></i> Siparişleriniz <strong>aynı gün</strong> kargoya verilir.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> Teslimat süresi <strong>1-3 iş günü</strong> arasındadır.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> Ürünü 14 gün içinde <strong>koşulsuz iade</strong> edebilirsiniz.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> Tüm ürünlerimiz <strong>2 yıl garantilidir</strong>.</li>
+        <li><i class="fa-solid fa-arrow-right"></i> Bu üründen en fazla <strong>2 adet</strong> sipariş verilebilir.</li>
+    </ul>
+</div>
+
+<!-- Benzer ürünler bölümü -->
+<hr class="my-5" />
+<h4 class="mb-4">Benzer Ürünler</h4>
+
+@{
+    var benzerUrunler = ViewBag.BenzerUrunler as List<BeyazEsyaE_Ticaret.tbl_urun>;
+}
+
+@if (benzerUrunler != null && benzerUrunler.Any())
+{
+    <div class="row">
+        @foreach (var benzer in benzerUrunler)
+        {
+            <div class="ol-12 col-sm-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm product-card">
+                    <img src="@Model.Urun.gorsel"
+                         class="urun-gorsel" onclick="openLightbox(this)" />
+                    <a href="/MusteriUrun/UrunDetay/@benzer.urun_ID" class="text-decoration-none text-dark">
+                        <div class="card-body">
+                            <h6 class="card-title">@benzer.urun_adi</h6>
+                            <p class="card-text">
+                                @benzer.tbl_marka.marka_adi / @benzer.tbl_model.model_adi
+                            </p>
+                            <p class="fw-bold">@benzer.fiyat ₺</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle me-2"></i>
+        Bu kategoriye ait başka bir ürün bulunmamaktadır.
+    </div>
+}
+
+<!-- Sepet Sidebar -->
+@if (Session["kullaniciID"] != null)
+{
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sepetSidebar" aria-labelledby="sepetSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sepetSidebarLabel">Sepetim</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column">
+            <div class="mb-3">
+                <strong>Toplam Tutar:</strong> <span id="sepet-toplam-fiyat">0 ₺</span>
+            </div>
+
+            <!-- Sepete eklenen ürünlerin sidebar menüde görüntülenceği kısım -->
+            <div id="sepet-icerik" class="flex-grow-1 overflow-auto">
+                <p class="text-muted bos-sepet">Sepetinizde ürün bulunmamaktadır.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sepet sidebar açma / kapama butonu -->
+    <button class="btn btn-outline-secondary sepet-ac-btn"
+            data-bs-toggle="offcanvas" data-bs-target="#sepetSidebar"
+            title="Sepeti Aç">
+        <i class="fa fa-shopping-cart"></i>
+    </button>
+}
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

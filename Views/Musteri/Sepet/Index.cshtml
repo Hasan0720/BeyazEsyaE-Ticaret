@@ -1,0 +1,87 @@
+﻿@model BeyazEsyaE_Ticaret.Models.SepetViewModel
+@{
+    ViewBag.Title = "Sepetim";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<h2 class="mb-4">Sepetim</h2>
+
+@if (Model != null && Model.Urunler != null && Model.Urunler.Any())
+{
+    <div class="row">
+        <!-- Sepet ürün kartları -->
+        <div class="col-md-8">
+            @foreach (var urun in Model.Urunler)
+            {
+                <div class="card mb-3 border-0 shadow-sm sepet-urun" data-urunid="@urun.UrunID">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-3 text-center">
+                            <img src="@urun.Gorsel" alt="@urun.UrunAdi" class="img-fluid p-2 urun-gorsel" onclick="openLightbox(this)" />
+                        </div>
+
+                        <div class="col-5">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold mb-2">@urun.UrunAdi</h5>
+                                <p class="text-muted small mb-0">Tahmini Kargoya Teslim: 2 gün</p>
+                            </div>
+                        </div>
+
+                        <div class="col-4 pe-3 text-end">
+                            <button class="btn btn-sm text-danger urun-sil-btn" data-urunid="@urun.UrunID">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                            <div class="fw-normal text-muted small">Birim Fiyat</div>
+                            <div class="urun-birim-fiyat fw-bold" data-birimfiyat="@urun.BirimFiyat">@urun.BirimFiyat.ToString("C")</div>
+
+                            <div class="input-group input-group-sm mt-2 mx-auto adet-group" >
+                                <input type="number" class="form-control text-center adet-input" min="1", max="@(urun.StokAdedi >= 2 ? 2 : urun.StokAdedi)" value="@urun.Adet" data-urunid="@urun.UrunID" data-stok="@urun.StokAdedi" />
+                            </div>
+
+                            @{
+                                decimal kdvOrani = 0.20m;
+                                var kdvTutar = (urun.BirimFiyat * urun.Adet) * kdvOrani;
+                                var kdvDahilToplam = (urun.BirimFiyat * urun.Adet) + kdvTutar;
+                            }
+
+                            <div class="fw-normal text-muted small mt-1">KDV Tutarı</div>
+                            <div class="urun-kdv-tutar fw-bold small mt-1"
+                                 data-birimfiyat="@urun.BirimFiyat">₺@kdvTutar.ToString("N2")</div>
+
+                                <div class="fw-normal text-muted small mt-1">Toplam (KDV Dahil)</div>
+                                <div class="urun-toplam-fiyat fw-bold"
+                                     data-birimfiyat="@urun.BirimFiyat">₺@kdvDahilToplam.ToString("N2")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+        </div>
+
+        <!-- Sipariş özeti -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Sipariş Özeti</h5>
+                <hr />
+                <p>Ara Toplam: <span id="araToplam">@Model.AraToplam.ToString("C")</span></p>
+                <p>KDV (%20): <span id="KDV">@(Model.KDV.ToString("C"))</span></p>
+                <h5>Genel Toplam: <span id="genelToplam">@((Model.AraToplam + Model.KDV).ToString("C"))</span></h5>
+                <a href="@Url.Action("Index", "SiparisTamamlama")" class="btn btn-success w-100 mt-3">
+                    Alışverişi Tamamla
+                </a>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center mt-4">
+        <i class="fa fa-info-circle me-2"></i> Sepetinizde ürün bulunmamaktadır.
+    </div>
+}
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

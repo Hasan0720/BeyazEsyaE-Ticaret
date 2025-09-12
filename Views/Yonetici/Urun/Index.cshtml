@@ -1,0 +1,149 @@
+﻿@model IEnumerable<BeyazEsyaE_Ticaret.tbl_urun>
+
+@{
+    ViewBag.Title = "Ürün Listesi";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Ürün Listesi</h2>
+        <a href="@Url.Action("UrunEkle", "Urun")" class="btn btn-success">
+            <i class="fa fa-plus"></i> Yeni Ürün Ekle
+        </a>
+    </div>
+
+    <!-- Ürün sayısı hesaplaması -->
+    <p class="text-muted mb-3">
+        Toplam ürün: <strong>@(Model?.Count() ?? 0)</strong>
+    </p>
+
+    <!-- Ürün tablosu -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped genel-tablo-stil">
+            <thead>
+                <tr>
+                    <th style="width:5%">ID</th>
+                    <th>
+                        Adı
+                        <a href="@Url.Action("Index", new { sortColumn = "urun_adi", sortDir = ViewBag.SortColumn == "urun_adi" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "urun_adi" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "urun_adi" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Kategori
+                        <a href="@Url.Action("Index", new { sortColumn = "kategori", sortDir = ViewBag.SortColumn == "kategori" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "kategori" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "kategori" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Marka
+                        <a href="@Url.Action("Index", new { sortColumn = "marka", sortDir = ViewBag.SortColumn == "marka" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "marka" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "marka" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Model
+                        <a href="@Url.Action("Index", new { sortColumn = "model", sortDir = ViewBag.SortColumn == "model" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "model" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "model" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>Açıklama</th>
+                    <th>
+                        Fiyat
+                        <a href="@Url.Action("Index", new { sortColumn = "fiyat", sortDir = ViewBag.SortColumn == "fiyat" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "fiyat" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "fiyat" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Stok
+                        <a href="@Url.Action("Index", new { sortColumn = "stok", sortDir = ViewBag.SortColumn == "stok" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "stok" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "stok" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>Görsel</th>
+                    <th>
+                        Öne Çıkan Mı
+                        <a href="@Url.Action("Index", new { sortColumn = "oneCikan", sortDir = ViewBag.SortColumn == "oneCikan" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "oneCikan" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "oneCikan" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Aktiflik Durumu
+                        <a href="@Url.Action("Index", new { sortColumn = "aktif", sortDir = ViewBag.SortColumn == "aktif" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "aktif" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "aktif" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>İşlem</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="12" class="text-center text-muted">Henüz ürün eklenmemiş.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var urun in Model)
+                    {
+            <tr>
+                <td>@urun.urun_ID</td>
+                <td>@urun.urun_adi</td>
+                <td>@urun.tbl_kategori.kategori_adi</td>
+                <td>@urun.tbl_marka.marka_adi</td>
+                <td>@urun.tbl_model.model_adi</td>
+                <td>@{
+                        var aciklama = urun.aciklama;
+                        if (!string.IsNullOrEmpty(aciklama))
+                        {
+                            // Metni madde formatlayarak gösterme
+                            var formatliAciklama = aciklama.Replace("\n", "<br /> ");
+
+                            if (formatliAciklama.Length > 50)
+                            {
+                                @Html.Raw(formatliAciklama.Substring(0, 50) + "...")
+                            }
+                            else
+                            {
+                                @Html.Raw(formatliAciklama)
+                            }
+                        }
+                    }
+                </td>
+                <td data-sort="@urun.fiyat.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                    @string.Format("{0:C}", urun.fiyat)
+                </td>
+
+                <td>@urun.mevcut_stok</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(urun.gorsel))
+                    {
+                        <img src="@Url.Content(urun.gorsel)" alt="Ürün Görseli" class="img-thumbnail" onclick="openLightbox(this)" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">Yok</span>
+                    }
+                </td>
+                <td data-sort="@(urun.oneCikan_mi ? 1 : 0)">@(urun.oneCikan_mi ? "Evet" : "Hayır")</td>
+                <td data-sort="@(urun.aktif_mi ? 1 : 0)">@(urun.aktif_mi ? "Aktif" : "Pasif")</td>
+
+                <td>
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <a href="@Url.Action("UrunDuzenle", "Urun", new { id = urun.urun_ID })" class="btn btn-sm btn-primary">
+                            <i class="fa fa-edit"></i> Düzenle
+                        </a>
+                        <a href="@Url.Action("AktiflikDegistir", "Urun", new { id = urun.urun_ID })" class="btn btn-sm @(urun.aktif_mi ? "btn-warning" : "btn-success")">
+                            <i class="fas @(urun.aktif_mi ? "fa-ban" : "fa-check")"></i>
+                            @(urun.aktif_mi ? "Pasifleştir" : "Aktifleştir")
+                        </a>
+                    </div>
+                </td>
+            </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

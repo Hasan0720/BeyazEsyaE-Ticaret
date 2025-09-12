@@ -1,0 +1,354 @@
+﻿/* Genel Yapı */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.footer {
+    background-color: #212529;
+    color: #ffffff;
+    font-size: 0.9rem;
+    border-top: 1px solid #444;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+    .footer a {
+        color: #ffc107;
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            text-decoration: none;
+        }
+
+/* Ana düzen */
+.admin-layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Offcanvas menü */
+.offcanvas {
+    max-width: 50%;
+}
+
+/* Sidebar menü */
+.sidebar {
+    width: 220px;
+    background-color: #343a40;
+    color: white;
+    padding: 20px 10px;
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+    .sidebar.collapsed {
+        width: 60px;
+    }
+
+.sidebar-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    white-space: nowrap;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+    .sidebar-nav a:hover {
+        background-color: #495057;
+        color: #ffc107
+    }
+
+.sidebar.collapsed .sidebar-title,
+.sidebar.collapsed .sidebar-nav a span {
+    display: none;
+}
+
+.sidebar-nav a i {
+    width: 24px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+/* Navbar */
+.navbar {
+    height: 60px;
+    background-color: #212529;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.logout-button a {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+    .logout-button a:hover {
+        color: #ffc107 !important;
+        text-decoration: none;
+    }
+
+/* İçerik Alanı */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* Genel olarak tablolar için özel stiller */
+.genel-tablo-stil {
+    text-align: center !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .genel-tablo-stil th,
+    .genel-tablo-stil td {
+        vertical-align: middle;
+        text-align: center !important;
+    }
+
+    .genel-tablo-stil thead {
+        background-color: #343a40;
+        color: white;
+    }
+
+ /* Tablo Sıralama */
+.sort-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 6px;
+    color: #555
+}
+
+    .sort-btn::after {
+        content: "⇅";
+        font-size: .85rem
+    }
+
+    .sort-btn.asc::after {
+        content: "▲"
+    }
+
+    .sort-btn.desc::after {
+        content: "▼"
+    }
+
+/* Tablo Görselleri */
+.table img.img-thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+}
+
+/* Kartlar */
+.card-body,
+.card-body:focus,
+.card-body:focus-within {
+    background-color: white !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+    /* Focus özelliği için arka plan etkisini engelleme */
+    .card-body input:focus,
+    .card-body textarea:focus,
+    .card-body select:focus {
+        background-color: white !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+/* Seçimler */
+.select-container {
+    position: relative;
+}
+
+    .select-container select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 2.5rem;
+    }
+
+.select-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* Görsel Yükleme */
+#drop-area {
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    min-height: 150px;
+}
+
+    #drop-area.hover {
+        background-color: #e9ecef;
+        border-color: #17a2b8;
+    }
+
+    #drop-area img {
+        max-height: 200px;
+        margin: auto;
+        display: block;
+    }
+
+#btn-remove-image {
+    z-index: 2;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.d-none {
+    display: none !important;
+}
+
+/* Lightbox genel stili */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Lightbox içeriği */
+.lightbox-content {
+    max-width: 95%;
+    max-height: 95%;
+    margin: auto;
+    display: block;
+    border: 5px solid white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+/* Kapatma düğmesi */
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .close:hover {
+        color: #ff4444;
+    }
+
+/* Lightbox açılış animasyonu */
+@keyframes zoomIn {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mobilde geçerli olacak menü yapısı */
+@media (max-width: 991px) {
+    .sidebar {
+        display: none;
+    }
+
+    .navbar .logout-button {
+        display: none !important;
+    }
+
+    .navbar .menu-button {
+        display: none !important;
+    }
+}
+
+/* Masaüstünde geçerli olacak menü yapısı */
+@media (min-width: 992px) {
+    .sidebar {
+        display: block !important;
+    }
+
+    .navbar .logout-button {
+        display: block !important;
+    }
+
+    .navbar .menu-button {
+        display: block !important;
+    }
+}
+
+/* Tedarikçi Ürünleri sayfası için özel stiller */
+.filtre-scroll {
+    max-height: 180px;
+    overflow: auto;
+}
+
+.urun-kart-gorsel {
+    max-height: 200px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+/* Rapor */
+canvas.grafik-canvas {
+    max-height: 300px;
+    width: 100%;
+}

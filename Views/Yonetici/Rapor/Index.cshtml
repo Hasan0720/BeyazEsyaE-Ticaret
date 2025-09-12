@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Raporlar";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Raporlar</h1>
+
+    <!-- İstatistik kartları -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col">
+            <div class="card bg-primary text-dark rounded-0 h-100">
+                <div class="card-body">
+                    Toplam Müşteri
+                    <div class="fs-4 fw-bold">@ViewBag.MusteriSayisi</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-success text-dark rounded-0 h-100">
+                <div class="card-body">
+                    Toplam Satış (₺)
+                    <div class="fs-4 fw-bold">@ViewBag.ToplamSatisTutari</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <i class="fas fa-coins fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-warning text-dark rounded-0 h-100">
+                <div class="card-body">
+                    Kar / Zarar
+                    <div class="fs-4 fw-bold">@ViewBag.KarZarar ₺</div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <i class="fas fa-balance-scale fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-info text-dark rounded-0 h-100">
+                <div class="card-body">
+                    En Çok Satılan Ürün
+                    <div class="fs-4 fw-bold">@ViewBag.EnCokSatilanUrun</div>
+                    <small class="fs-4 fw-bold">@ViewBag.EnCokSatilanAdet adet</small>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <i class="fas fa-fire fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafikler -->
+    <div class="row mt-4">
+        <div class="col-xl-6">
+            <div class="card mb-4 rounded-0">
+                <div class="card-header bg-light border-bottom">
+                    <i class="fas fa-chart-area me-1"></i>
+                    Aylık Satış Tutarı
+                </div>
+                <div class="card-body"><canvas id="chartAylikSatis" class="grafik-canvas"></canvas></div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4 rounded-0">
+                <div class="card-header bg-light border-bottom">
+                    <i class="fas fa-chart-pie me-1"></i>
+                    Kategoriye Göre Satış (Adet)
+                </div>
+                <div class="card-body"><canvas id="chartKategori" class="grafik-canvas"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tedarik siparişleri tablosu -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <i class="fas fa-truck me-1"></i>
+            Tedarik Siparişleri
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-striped table-bordered table-sm genel-tablo-stil">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            Tedarikçi
+                            <a href="@Url.Action("Index", new { sortColumn = "tedarikci", sortDir = ViewBag.SortColumn == "tedarikci" && ViewBag.SortDir == "asc" ? "desc" : "asc" })"
+                               class="sort-btn fw-bold text-white @(ViewBag.SortColumn == "tedarikci" ? ViewBag.SortDir : "")"></a>
+                        </th>
+                        <th>
+                            Ürün Adı
+                            <a href="@Url.Action("Index", new { sortColumn = "urun", sortDir = ViewBag.SortColumn == "urun" && ViewBag.SortDir == "asc" ? "desc" : "asc" })"
+                               class="sort-btn fw-bold text-white @(ViewBag.SortColumn == "urun" ? ViewBag.SortDir : "")"></a>
+                        </th>
+                        <th>
+                            Toplam Tutar (₺)
+                            <a href="@Url.Action("Index", new { sortColumn = "tutar", sortDir = ViewBag.SortColumn == "tutar" && ViewBag.SortDir == "asc" ? "desc" : "asc" })"
+                               class="sort-btn fw-bold text-white @(ViewBag.SortColumn == "tutar" ? ViewBag.SortDir : "")"></a>
+                        </th>
+                        <th>
+                            Tarih
+                            <a href="@Url.Action("Index", new { sortColumn = "tarih", sortDir = ViewBag.SortColumn == "tarih" && ViewBag.SortDir == "asc" ? "desc" : "asc" })"
+                               class="sort-btn fw-bold text-white @(ViewBag.SortColumn == "tarih" ? ViewBag.SortDir : "")"></a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tedarikSiparisTable">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const kategoriData = @Html.Raw(ViewBag.KategoriSatisJSON ?? "[]");
+    const aylikData = @Html.Raw(ViewBag.AylikSatisJSON ?? "[]");
+    const tedarikData = @Html.Raw(ViewBag.TedarikJSON ?? "[]");
+
+    new Chart(document.getElementById("chartKategori"), {
+        type: 'bar',
+        data: {
+            labels: kategoriData.map(x => x.Kategori),
+            datasets: [{
+                label: 'Adet',
+                data: kategoriData.map(x => x.Adet),
+                backgroundColor: '#ffc107'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById("chartAylikSatis"), {
+        type: 'line',
+        data: {
+            labels: aylikData.map(x => x.Ay + "/" + x.Yil),
+            datasets: [{
+                label: '₺',
+                data: aylikData.map(x => x.Tutar),
+                fill: true,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0,123,255,0.2)',
+                tension: 0.3,
+                pointBackgroundColor: '#007bff'
+            }]
+        }
+    });
+
+    const tbody = document.getElementById("tedarikSiparisTable");
+    tedarikData.forEach((item, index) => {
+        const row = `<tr>
+            <td>${index + 1}</td>
+            <td>${item.Tedarikci}</td>
+            <td>${item.UrunAdi}</td>
+            <td data-sort="${item.ToplamTutar}">
+                ${item.ToplamTutar.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' })}
+            </td>
+            <td data-sort="${new Date(item.Tarih).getTime()}">
+                ${new Date(item.Tarih).toLocaleDateString('tr-TR')}
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+</script>

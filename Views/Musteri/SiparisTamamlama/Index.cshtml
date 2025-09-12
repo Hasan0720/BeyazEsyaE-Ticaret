@@ -1,0 +1,161 @@
+﻿@model BeyazEsyaE_Ticaret.Models.SiparisTamamlamaViewModel
+@{
+    ViewBag.Title = "Siparişi Tamamla";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+    const decimal kdvOrani = 0.2m;
+}
+
+<h2 class="mt-4 mb-4 fw-bold text-center">Sipariş Özeti</h2>
+
+@using (Html.BeginForm("Index", "SiparisTamamlama", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <!-- Müşteri bilgileri ve adres seçimi -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">
+                    <i class="fa fa-user me-2"></i> Müşteri Bilgileri
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Ad Soyad:</strong> <span class="ms-1">@Model.MusteriAdSoyad</span><br />
+                        <strong>Telefon:</strong> <span class="ms-1">@Model.Telefon</span>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        @Html.RadioButtonFor(m => m.KayitliAdresSeciliMi, true, new { id = "kayitliAdres", @class = "form-check-input" })
+                        <label class="form-check-label" for="kayitliAdres">
+                            Kayıtlı adresi kullan: <strong>@Model.Adres</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        @Html.RadioButtonFor(m => m.KayitliAdresSeciliMi, false, new { id = "yeniAdres", @class = "form-check-input" })
+                        <label class="form-check-label" for="yeniAdres">
+                            Yeni adres girmek istiyorum
+                        </label>
+                    </div>
+
+                    @Html.TextAreaFor(m => m.YeniAdres, new { @class = "form-control mt-2", id = "YeniAdresInput", rows = "3", placeholder = "Yeni adresinizi yazınız...", style = Model.KayitliAdresSeciliMi ? "display:none;" : "display:block;" })
+                    @Html.ValidationMessageFor(m => m.YeniAdres, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <!-- Siparişe dahil ürünler -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">
+                    <i class="fa fa-shopping-cart me-2"></i> Sepetimdeki Ürünler
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle m-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ürün</th>
+                                    <th class="text-end">Adet</th>
+                                    <th class="text-end">Birim Fiyat</th>
+                                    <th class="text-end">KDV</th>
+                                    <th class="text-end">Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    decimal toplamAra = 0;
+                                    decimal toplamKdv = 0;
+                                    decimal toplamGenel = 0;
+                                }
+
+                                @foreach (var item in Model.Urunler)
+                                {
+                                    var kdv = item.BirimFiyat * kdvOrani * item.Adet;
+                                    var toplam = item.ToplamFiyat + kdv;
+
+                                    toplamAra += item.ToplamFiyat;
+                                    toplamKdv += kdv;
+                                    toplamGenel += toplam;
+
+                                    <tr>
+                                        <td>@item.UrunAdi</td>
+                                        <td class="text-end">@item.Adet</td>
+                                        <td class="text-end">@item.BirimFiyat.ToString("C")</td>
+                                        <td class="text-end">@kdv.ToString("C")</td>
+                                        <td class="text-end">@toplam.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr class="fw-bold">
+                                    <td colspan="4" class="text-end">Ara Toplam:</td>
+                                    <td class="text-end">@toplamAra.ToString("C")</td>
+                                </tr>
+                                <tr class="fw-bold text-warning">
+                                    <td colspan="4" class="text-end">KDV (%20):</td>
+                                    <td class="text-end">@toplamKdv.ToString("C")</td>
+                                </tr>
+                                <tr class="fw-bold text-success">
+                                    <td colspan="4" class="text-end">Genel Toplam:</td>
+                                    <td class="text-end">@toplamGenel.ToString("C")</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sözleşmeler -->
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-header bg-light fw-semibold">
+            <i class="fa fa-file-contract me-2"></i> Sözleşmeler
+        </div>
+        <div class="card-body">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="sozlesme1" name="sozlesme1" required />
+                <label class="form-check-label" for="sozlesme1">
+                    <a href="#" class="sozlesme-link" data-title="Mesafeli Satış Sözleşmesi" data-content="/Content/sozlesmeler/mesafeli-satis.html">Mesafeli Satış Sözleşmesi'ni</a> okudum ve kabul ediyorum.
+                </label>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="sozlesme2" name="sozlesme2" required />
+                <label class="form-check-label" for="sozlesme2">
+                    <a href="#" class="sozlesme-link" data-title="Ön Bilgilendirme Formu" data-content="/Content/sozlesmeler/on-bilgilendirme.html">Ön Bilgilendirme Formu'nu</a> okudum ve kabul ediyorum.
+                </label>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="sozlesme3" name="sozlesme3" required />
+                <label class="form-check-label" for="sozlesme3">
+                    <a href="#" class="sozlesme-link" data-title="Cayma Hakkı Formu" data-content="/Content/sozlesmeler/cayma-hakki.html">Cayma Hakkı Formu'nu</a> okudum ve kabul ediyorum.
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-end">
+        <button id="siparisiTamamlaBtn" type="submit" class="btn btn-lg btn-success px-5" disabled>Siparişi Tamamla</button>
+    </div>
+}
+
+<!-- Sözleşme Modal -->
+<div class="modal fade" id="sozlesmeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sozlesmeModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="sozlesmeModalBody">
+                <!-- fetch edilen sözleşme buraya gelecek -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okudum</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model BeyazEsyaE_Ticaret.tbl_kategori
+
+@{
+    ViewBag.Title = "Kategori Ekleme";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+    <h3><i class="fas fa-plus-circle text-success me-2"></i>Yeni Kategori Ekleme</h3>
+    <a href="@Url.Action("Index", "Kategori")" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Kategori Listesine Dön
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <strong><i class="fas fa-folder-plus me-2"></i>Kategori Bilgileri</strong>
+            </div>
+
+            <!-- Kategori ekleme formu-->
+            <div class="card-body">
+                @using (Html.BeginForm("KategoriEkle", "Kategori", FormMethod.Post, new { @id = "kategoriEkleForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.kategori_adi, "Kategori Adı", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(model => model.kategori_adi, new { @class = "form-control", @placeholder = "Örn: Buzdolabı", @id = "kategoriAdi" })
+                        @Html.ValidationMessageFor(model => model.kategori_adi, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="document.getElementById('kategoriAdi').value = '';">
+                            <i class="fas fa-eraser"></i> Temizle
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilgilendirme kartı-->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <i class="fas fa-info-circle text-primary"></i> Bilgilendirme
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Bu form aracılığıyla sisteme yeni bir ürün kategorisi ekleyebilirsiniz.
+                </p>
+                <p class="card-text">
+                    Eklenen kategoriler, müşteri panelinde ürünlerin gruplandırılması için kullanılacaktır.
+                </p>
+                <hr />
+                <p class="card-text text-muted">
+                    Lütfen sistemde aynı isimde bir kategori olmadığından emin olunuz.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

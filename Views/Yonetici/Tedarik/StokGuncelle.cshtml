@@ -1,0 +1,113 @@
+﻿@model BeyazEsyaE_Ticaret.tbl_urun
+
+@{
+    ViewBag.Title = "Stok Güncelle";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+    <h3><i class="fas fa-edit text-success me-2"></i>Stok Güncelle</h3>
+    <a href="@Url.Action("TedarikciUrunleri", "Tedarik", new { tedarikci_id = ViewBag.TedarikciID })" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Ürün Listesine Dön
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <strong><i class="fas fa-box"></i> Ürün Bilgileri</strong>
+            </div>
+            <!-- Stok güncelleme formu -->
+            <div class="card-body">
+                @using (Html.BeginForm("StokGuncelle", "Tedarik", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("urun_ID", Model.urun_ID)
+                    @Html.Hidden("tedarikci_ID", (int)ViewBag.TedarikciID)
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(m => m.urun_adi, "Ürün Adı", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.urun_adi, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Kategori</label>
+                        @Html.TextBox("Kategori", Model.tbl_kategori.kategori_adi, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Marka</label>
+                        @Html.TextBox("Marka", Model.tbl_marka.marka_adi, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Model</label>
+                        @Html.TextBox("Model", Model.tbl_model.model_adi, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(m => m.mevcut_stok, "Mevcut Stok", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.mevcut_stok, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.Label("birimMaliyet", "Birim Maliyet", new { @class = "form-label fw-bold" })
+                        @Html.TextBox("birimMaliyet", ViewBag.BirimMaliyet != null ?
+                        ((decimal)ViewBag.BirimMaliyet).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) : "", new
+                        { @class = "form-control", min = "0", step = "0.01", id = "birimMaliyet" })
+                        @Html.ValidationMessage("birimMaliyet", "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.Label("adet", "Adet", new { @class = "form-label fw-bold" })
+                        @Html.TextBox("adet", "1", new
+                        { @class = "form-control", min = "1", step = "1", id = "adet" })
+                        @Html.ValidationMessage("adet", "", new { @class = "text-danger" })
+                    </div>
+
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Toplam Maliyet</label>
+                        @Html.TextBox("toplamMaliyet", null, new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly",
+                            id = "toplamMaliyet"
+                        })
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Güncelle
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilgilendirme kartı-->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <i class="fas fa-info-circle text-primary"></i> Bilgilendirme
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Bu sayfa yalnızca stok güncellemesi için kullanılmaktadır.
+                </p>
+                <p class="card-text">
+                    Güncelleme, seçili ürünün stok miktarına yeni adet eklenmesiyle gerçekleştirilir.
+                </p>
+                <p class="card-text">
+                    Toplam maliyet, birim maliyet × adet formülüyle hesaplanmaktadır.
+                </p>
+                <hr />
+                <p class="card-text text-muted">
+                    Lütfen eklemek istediğiniz miktarı doğru giriniz.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

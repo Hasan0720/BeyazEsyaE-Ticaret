@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="ETicaretEntities">
+    <EntitySetMapping Name="tbl_fatura">
+      <EntityTypeMapping TypeName="Model.tbl_fatura">
+        <MappingFragment StoreEntitySet="tbl_fatura">
+          <ScalarProperty Name="fatura_ID" ColumnName="fatura_ID" />
+          <ScalarProperty Name="siparis_ID" ColumnName="siparis_ID" />
+          <ScalarProperty Name="toplam_tutar" ColumnName="toplam_tutar" />
+          <ScalarProperty Name="fatura_tarihi" ColumnName="fatura_tarihi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_iletisim">
+      <EntityTypeMapping TypeName="Model.tbl_iletisim">
+        <MappingFragment StoreEntitySet="tbl_iletisim">
+          <ScalarProperty Name="iletisim_ID" ColumnName="iletisim_ID" />
+          <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+          <ScalarProperty Name="ad" ColumnName="ad" />
+          <ScalarProperty Name="soyad" ColumnName="soyad" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="mesaj" ColumnName="mesaj" />
+          <ScalarProperty Name="gonderim_tarihi" ColumnName="gonderim_tarihi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_kategori">
+      <EntityTypeMapping TypeName="Model.tbl_kategori">
+        <MappingFragment StoreEntitySet="tbl_kategori">
+          <ScalarProperty Name="kategori_ID" ColumnName="kategori_ID" />
+          <ScalarProperty Name="kategori_adi" ColumnName="kategori_adi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_kullanici">
+      <EntityTypeMapping TypeName="Model.tbl_kullanici">
+        <MappingFragment StoreEntitySet="tbl_kullanici">
+          <ScalarProperty Name="reset_token_sona_erme" ColumnName="reset_token_sona_erme" />
+          <ScalarProperty Name="reset_token_hash" ColumnName="reset_token_hash" />
+          <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+          <ScalarProperty Name="rol_ID" ColumnName="rol_ID" />
+          <ScalarProperty Name="ad" ColumnName="ad" />
+          <ScalarProperty Name="soyad" ColumnName="soyad" />
+          <ScalarProperty Name="telefon_no" ColumnName="telefon_no" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="adres" ColumnName="adres" />
+          <ScalarProperty Name="sifre" ColumnName="sifre" />
+          <ScalarProperty Name="kayit_tarihi" ColumnName="kayit_tarihi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_marka">
+      <EntityTypeMapping TypeName="Model.tbl_marka">
+        <MappingFragment StoreEntitySet="tbl_marka">
+          <ScalarProperty Name="marka_ID" ColumnName="marka_ID" />
+          <ScalarProperty Name="marka_adi" ColumnName="marka_adi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_model">
+      <EntityTypeMapping TypeName="Model.tbl_model">
+        <MappingFragment StoreEntitySet="tbl_model">
+          <ScalarProperty Name="model_ID" ColumnName="model_ID" />
+          <ScalarProperty Name="marka_ID" ColumnName="marka_ID" />
+          <ScalarProperty Name="model_adi" ColumnName="model_adi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_rol">
+      <EntityTypeMapping TypeName="Model.tbl_rol">
+        <MappingFragment StoreEntitySet="tbl_rol">
+          <ScalarProperty Name="rol_ID" ColumnName="rol_ID" />
+          <ScalarProperty Name="rol_adi" ColumnName="rol_adi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_sepet">
+      <EntityTypeMapping TypeName="Model.tbl_sepet">
+        <MappingFragment StoreEntitySet="tbl_sepet">
+          <ScalarProperty Name="sepet_ID" ColumnName="sepet_ID" />
+          <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+          <ScalarProperty Name="toplam_fiyat" ColumnName="toplam_fiyat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_sepetDetay">
+      <EntityTypeMapping TypeName="Model.tbl_sepetDetay">
+        <MappingFragment StoreEntitySet="tbl_sepetDetay">
+          <ScalarProperty Name="sepetDetay_ID" ColumnName="sepetDetay_ID" />
+          <ScalarProperty Name="sepet_ID" ColumnName="sepet_ID" />
+          <ScalarProperty Name="urun_ID" ColumnName="urun_ID" />
+          <ScalarProperty Name="adet" ColumnName="adet" />
+          <ScalarProperty Name="birim_fiyat" ColumnName="birim_fiyat" />
+          <ScalarProperty Name="toplam_fiyat" ColumnName="toplam_fiyat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_siparis">
+      <EntityTypeMapping TypeName="Model.tbl_siparis">
+        <MappingFragment StoreEntitySet="tbl_siparis">
+          <ScalarProperty Name="siparis_ID" ColumnName="siparis_ID" />
+          <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+          <ScalarProperty Name="siparisDurum_ID" ColumnName="siparisDurum_ID" />
+          <ScalarProperty Name="toplam_tutar" ColumnName="toplam_tutar" />
+          <ScalarProperty Name="teslimat_adresi" ColumnName="teslimat_adresi" />
+          <ScalarProperty Name="siparis_tarihi" ColumnName="siparis_tarihi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_siparisDetay">
+      <EntityTypeMapping TypeName="Model.tbl_siparisDetay">
+        <MappingFragment StoreEntitySet="tbl_siparisDetay">
+          <ScalarProperty Name="siparisDetay_ID" ColumnName="siparisDetay_ID" />
+          <ScalarProperty Name="siparis_ID" ColumnName="siparis_ID" />
+          <ScalarProperty Name="urun_ID" ColumnName="urun_ID" />
+          <ScalarProperty Name="adet" ColumnName="adet" />
+          <ScalarProperty Name="birim_fiyat" ColumnName="birim_fiyat" />
+          <ScalarProperty Name="toplam_fiyat" ColumnName="toplam_fiyat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_siparisDurum">
+      <EntityTypeMapping TypeName="Model.tbl_siparisDurum">
+        <MappingFragment StoreEntitySet="tbl_siparisDurum">
+          <ScalarProperty Name="siparisDurum_ID" ColumnName="siparisDurum_ID" />
+          <ScalarProperty Name="durum_adi" ColumnName="durum_adi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_tedarikci">
+      <EntityTypeMapping TypeName="Model.tbl_tedarikci">
+        <MappingFragment StoreEntitySet="tbl_tedarikci">
+          <ScalarProperty Name="tedarikci_ID" ColumnName="tedarikci_ID" />
+          <ScalarProperty Name="tedarikci_adi" ColumnName="tedarikci_adi" />
+          <ScalarProperty Name="telefon" ColumnName="telefon" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="adres" ColumnName="adres" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_tedarikSiparisDetay">
+      <EntityTypeMapping TypeName="Model.tbl_tedarikSiparisDetay">
+        <MappingFragment StoreEntitySet="tbl_tedarikSiparisDetay">
+          <ScalarProperty Name="tedarikSiparisDetay_ID" ColumnName="tedarikSiparisDetay_ID" />
+          <ScalarProperty Name="tedarikSiparis_ID" ColumnName="tedarikSiparis_ID" />
+          <ScalarProperty Name="urun_ID" ColumnName="urun_ID" />
+          <ScalarProperty Name="adet" ColumnName="adet" />
+          <ScalarProperty Name="birim_maliyet" ColumnName="birim_maliyet" />
+          <ScalarProperty Name="toplam_maliyet" ColumnName="toplam_maliyet" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_tedarikSiparisleri">
+      <EntityTypeMapping TypeName="Model.tbl_tedarikSiparisleri">
+        <MappingFragment StoreEntitySet="tbl_tedarikSiparisleri">
+          <ScalarProperty Name="tedarikSiparis_ID" ColumnName="tedarikSiparis_ID" />
+          <ScalarProperty Name="tedarikci_ID" ColumnName="tedarikci_ID" />
+          <ScalarProperty Name="toplam_tutar" ColumnName="toplam_tutar" />
+          <ScalarProperty Name="siparis_tarihi" ColumnName="siparis_tarihi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_urun">
+      <EntityTypeMapping TypeName="Model.tbl_urun">
+        <MappingFragment StoreEntitySet="tbl_urun">
+          <ScalarProperty Name="aktif_mi" ColumnName="aktif_mi" />
+          <ScalarProperty Name="urun_ID" ColumnName="urun_ID" />
+          <ScalarProperty Name="kategori_ID" ColumnName="kategori_ID" />
+          <ScalarProperty Name="marka_ID" ColumnName="marka_ID" />
+          <ScalarProperty Name="model_ID" ColumnName="model_ID" />
+          <ScalarProperty Name="urun_adi" ColumnName="urun_adi" />
+          <ScalarProperty Name="aciklama" ColumnName="aciklama" />
+          <ScalarProperty Name="mevcut_stok" ColumnName="mevcut_stok" />
+          <ScalarProperty Name="fiyat" ColumnName="fiyat" />
+          <ScalarProperty Name="gorsel" ColumnName="gorsel" />
+          <ScalarProperty Name="oneCikan_mi" ColumnName="oneCikan_mi" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

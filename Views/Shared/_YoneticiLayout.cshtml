@@ -1,0 +1,157 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beyaz Vitrin - @ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link href="~/Content/yonetici_style.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/Content/logo.ico" />
+
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Yan menü - Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <h2 class="sidebar-title">Yönetici Paneli</h2>
+            <div class="sidebar-nav">
+                <a href="/Kategori/Index"><i class="fa-solid fa-list"></i><span>Kategoriler</span></a>
+                <a href="/Urun/Index"><i class="fas fa-box"></i> <span>Ürünler</span></a>
+                <a href="/Siparis/Index"><i class="fas fa-shopping-cart"></i> <span>Siparişler</span></a>
+                <a href="/Tedarik/Index"><i class="fas fa-truck"></i> <span>Tedarik</span></a>
+                <a href="/Fatura/Index"><i class="fas fa-file-invoice"></i> <span>Faturalar</span></a>
+                <a href="/Rapor/Index"><i class="fas fa-chart-bar"></i> <span>Raporlar</span></a>
+            </div>
+        </nav>
+
+        <!-- Ana içerik alanı -->
+        <main class="main-content">
+            <header class="navbar navbar-dark bg-dark">
+                <button id="menu-toggle" class="menu-button">☰</button>
+
+                <!-- Mobil görünümde kullanıalcak offcanvas menü butonu -->
+                <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Arama alanı -->
+                <div class="d-flex align-items-center ms-auto">
+                    @if (ViewBag.AramaGoster == true)
+                    {
+                        <form class="d-flex my-2 my-lg-0 me-3" role="search" method="get" action="@ViewBag.AramaURL">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="q" placeholder="Ara..." aria-label="Ara" value="@Request["q"]">
+                                <button class="btn btn-outline-light" type="submit">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    <div class="logout-button">
+                        <a href="/Giris/Cikis">Çıkış</a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Mobil sidebar - Offcanvas -->
+            <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="mobileSidebarLabel">
+                        <i class="fa-solid fa-gear me-2"></i> Yönetici Paneli
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
+                </div>
+                <div class="offcanvas-body p-0 d-flex flex-column">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Kategori/Index">
+                                <i class="fas fa-list"></i> Kategoriler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Urun/Index">
+                                <i class="fas fa-box"></i> Ürünler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Siparis/Index">
+                                <i class="fas fa-shopping-cart"></i> Siparişler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Tedarik/Index">
+                                <i class="fas fa-truck"></i> Tedarik
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Fatura/Index">
+                                <i class="fas fa-file-invoice"></i> Faturalar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/Rapor/Index">
+                                <i class="fas fa-chart-bar"></i> Raporlar
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="text-secondary">
+                    <a href="/Giris/Cikis" class="btn btn-danger w-100"><i class="fa-solid fa-right-from-bracket me-2"></i>Çıkış Yap</a>
+                </div>
+            </div>
+
+
+            <!-- Sayfa İçeriği -->
+            <section class="content">
+                <!-- Başarı / bilgilendirme / uyarı mesajları -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["InfoMessage"] != null)
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-circle-info"></i> @TempData["InfoMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-circle-warning"></i> @TempData["WarningMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <!-- AJAX mesajları için boş container -->
+                <div id="ajax-mesaj-container"></div>
+                @RenderBody()
+            </section>
+
+            <footer class="footer mt-auto py-4 bg-dark text-light">
+                <div class="text-center">
+                    <p class="mb-1">© 2025 Beyaz Vitrin</p>
+                    <p class="mb-0">
+                        Tüm hakları saklıdır |
+                        <a href="/Musteri/Iletisim" class="text-warning text-decoration-none">İletişim</a>
+                    </p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/Scripts/yonetici_script.js"></script>
+</body>
+</html>

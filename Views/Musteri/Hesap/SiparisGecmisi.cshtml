@@ -1,0 +1,85 @@
+﻿@model List<BeyazEsyaE_Ticaret.Models.SiparisGecmisiViewModel>
+@{
+    ViewBag.Title = "Sipariş Geçmişi";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+<a href="/Hesap/Index" class="btn btn-outline-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-1"></i> Geri Dön
+</a>
+
+<h2 class="mb-4">Sipariş Geçmişi</h2>
+
+<!-- Durum kategorisi sekmeleri -->
+<div class="mb-4 d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-secondary filter-btn active fw-bold" data-filter="Tümü">Tümü</button>
+    <button class="btn btn-outline-success filter-btn fw-bold" data-filter="Faturalandı">Faturalandı</button>
+    <button class="btn btn-outline-primary filter-btn fw-bold" data-filter="Teslim Edildi">Teslim Edildi</button>
+    <button class="btn btn-outline-info filter-btn fw-bold" data-filter="Kargoya Verildi">Kargoya Verildi</button>
+    <button class="btn btn-outline-warning filter-btn fw-bold" data-filter="Hazırlanıyor">Hazırlanıyor</button>
+</div>
+
+<!-- Sipariş kartları -->
+<div class="row" id="siparisListesi">
+    @foreach (var item in Model)
+    {
+        <div class="col-12 mb-4" data-durum="@item.SiparisDurumu">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                        <div class="d-flex flex-column flex-md-row gap-2 gap-md-4">
+                            <div><strong>Sipariş tarihi:</strong> @item.SiparisTarihi.ToShortDateString()</div>
+                            <div><strong>Sipariş özeti:</strong> @item.TeslimatSayisi Teslimat, @item.ToplamUrunSayisi Ürün</div>
+                            <div><strong>Alıcı:</strong> @item.AliciAdi</div>
+                            <div><strong>Toplam:</strong> <span>@item.ToplamTutar.ToString("C")</span></div>
+                        </div>
+                        <a href="@Url.Action("SiparisDetay", "Hesap", new { siparisID = item.SiparisID })" class="btn btn-success">Detaylar</a>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center px-2">
+                        <div>
+                            @if (item.SiparisDurumu == "Hazırlanıyor")
+                            {
+                                <span class="text-warning fw-bold">⌛ Hazırlanıyor</span>
+                                <div class="text-muted">@item.ToplamUrunSayisi ürün hazırlanıyor</div>
+                            }
+                            else if (item.SiparisDurumu == "Kargoya Verildi")
+                            {
+                                <span class="text-info fw-bold">📦 Kargoya Verildi</span>
+                                <div class="text-muted">@item.ToplamUrunSayisi ürün kargoya verildi</div>
+                            }
+                            else if (item.SiparisDurumu == "Teslim Edildi")
+                            {
+                                <span class="text-primary fw-bold">✅ Teslim Edildi</span>
+                                <div class="text-muted">@item.ToplamUrunSayisi ürün teslim edildi</div>
+                            }
+                            else if (item.SiparisDurumu == "Faturalandı")
+                            {
+                                <span class="text-success fw-bold ">🧾 Faturalandı</span>
+                                <div class="text-muted">@item.ToplamUrunSayisi ürün için fatura oluşturuldu</div>
+                            }
+                        </div>
+                        <div class="d-flex gap-2">
+                            @foreach (var gorsel in item.Gorsel)
+                            {
+                                <img src="@gorsel" alt="Ürün Görseli" class="img-thumbnail siparis-gorsel" onclick="openLightbox(this)" />
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    <div id="bosKategoriMesaji" class="alert alert-info text-center d-none">
+        Bu duruma ait sipariş bulunmamaktadır.
+    </div>
+
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

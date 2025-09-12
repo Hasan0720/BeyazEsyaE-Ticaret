@@ -1,0 +1,164 @@
+﻿@model BeyazEsyaE_Ticaret.Models.UrunlerViewModel
+@{
+    ViewBag.Title = "Ürünler";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<h3 class="mb-4">Ürünler</h3>
+
+<!-- Kategori Sekmeleri -->
+<div class="mb-4 text-center">
+    @{
+        var seciliId = ViewBag.SecilenKategoriID as int?;
+    }
+
+    <a href="/MusteriUrun/Index"
+       class="btn @(seciliId == null ? "btn-primary" : "btn-outline-secondary") m-1 kategori-btn"
+       data-kategori="">
+        Tümü
+    </a>
+
+    @foreach (var kategori in Model.Kategoriler)
+    {
+        var aktifKategori = (kategori.kategori_ID == seciliId)
+                         ? "btn-primary"
+                         : "btn-outline-secondary";
+
+        <a href="/MusteriUrun/Index?kategoriId=@kategori.kategori_ID"
+           class="btn @aktifKategori m-1 kategori-btn"
+           data-kategori="@kategori.kategori_ID">
+            @kategori.kategori_adi
+        </a>
+    }
+</div>
+
+<!-- Filtre Butonu -->
+<div class="text-center mb-4">
+    <button id="urunFiltreBtn" class="btn btn-outline-primary"
+            data-base-url="@Url.Action("Index", "MusteriUrun")">
+        <i class="fa fa-filter"></i> Filtrele
+    </button>
+</div>
+
+<!-- Filterleme şablonu -->
+<div id="urunFiltreTemplate" class="d-none">
+    <div class="p-2">
+        <h6>Markalar</h6>
+        @foreach (var m in ViewBag.Markalar)
+        {
+            <div>
+                <input type="checkbox" name="marka" value="@m.marka_ID" id="marka_@m.marka_ID" />
+                <label for="marka_@m.marka_ID">@m.marka_adi</label>
+            </div>
+        }
+        <hr />
+        <h6>Fiyat Aralığı</h6>
+        <div class="mb-2">
+            <input type="number" name="minFiyat" class="form-control form-control-sm" placeholder="Min ₺" />
+        </div>
+        <div class="mb-2">
+            <input type="number" name="maxFiyat" class="form-control form-control-sm" placeholder="Max ₺" />
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-secondary" data-act="clear">Temizle</button>
+            <button type="button" class="btn btn-sm btn-primary" data-act="apply">Uygula</button>
+        </div>
+    </div>
+</div>
+
+<!-- Ürün kartları -->
+<div class="row" id="urunKartlar">
+    @if (Model.Urunler == null || !Model.Urunler.Any())
+    {
+        <div class="col-12 text-center">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i> Bu kategoriye ait ürün bulunmamaktadır.
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var urun in Model.Urunler)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm urun-kart product-card">
+                    <img src="@urun.gorsel" class="card-img-top urun-gorsel" alt="@urun.urun_adi" onclick="openLightbox(this)" />
+                    <a href="/MusteriUrun/UrunDetay/@urun.urun_ID" class="text-decoration-none text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">@urun.urun_adi</h5>
+                            <p class="card-text">
+                                @urun.tbl_marka.marka_adi / @urun.tbl_model.model_adi
+                            </p>
+                            <p class="fw-bold">@urun.fiyat ₺</p>
+                            <p class="mb-2 stok-badge">
+                                @if (urun.mevcut_stok == 0)
+                                {
+                                    <span class="badge bg-danger text-white">Tükendi</span>
+                                }
+                                else if (urun.mevcut_stok <= 10)
+                                {
+                                    <span class="badge bg-warning text-dark">Tükeniyor son @urun.mevcut_stok ürün</span>
+                                }
+                            </p>
+                        </div>
+                    </a>
+                    <div class="card-footer bg-white border-0 text-center pb-3">
+                        @if (Session["kullaniciID"] != null)
+                        {
+                            <button class="btn btn-success w-75 sepete-ekle-btn"
+                                    data-urun-id="@urun.urun_ID"
+                                    data-stok="@urun.mevcut_stok"
+                                    data-bs-toggle="offcanvas"
+                                    data-bs-target="#sepetSidebar">
+                                <i class="fa-solid fa-cart-plus"></i> Sepete Ekle
+                            </button>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Giris", "Giris")"
+                               class="btn btn-success w-75">
+                                <i class="fa-solid fa-cart-plus"></i> Sepete Ekle
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- Sepet Sidebar -->
+@if (Session["kullaniciID"] != null)
+{
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sepetSidebar" aria-labelledby="sepetSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sepetSidebarLabel">Sepetim</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column">
+            <div class="mb-3">
+                <strong>Toplam Tutar:</strong> <span id="sepet-toplam-fiyat">0 ₺</span>
+            </div>
+
+            <!-- Sepete eklenen ürünlerin sidebar menüde görüntülenceği kısım -->
+            <div id="sepet-icerik" class="flex-grow-1 overflow-auto">
+                <p class="text-muted bos-sepet">Sepetinizde ürün bulunmamaktadır.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sepet sidebar açma / kapama butonu -->
+    <button class="btn btn-outline-secondary sepet-ac-btn"
+            data-bs-toggle="offcanvas" data-bs-target="#sepetSidebar"
+            title="Sepeti Aç">
+        <i class="fa fa-shopping-cart"></i>
+    </button>
+}
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<BeyazEsyaE_Ticaret.tbl_tedarikci>
+
+@{
+    ViewBag.Title = "Tedarikçi Listesi";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Tedarikçi Listesi</h2>
+    </div>
+
+    <!-- Tedarikçi sayısı hesaplaması -->
+    <p class="text-muted mb-3">
+        Toplam tedarikçi: <strong>@(Model?.Count() ?? 0)</strong>
+    </p>
+
+    <!-- Tedarikçi tablosu -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped genel-tablo-stil">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>
+                        Adı
+                        <a href="@Url.Action("Index", new { sortColumn = "tedarikci_adi", sortDir = ViewBag.SortColumn == "tedarikci_adi" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "tedarikci_adi" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "tedarikci_adi" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Telefon
+                        <a href="@Url.Action("Index", new { sortColumn = "telefon", sortDir = ViewBag.SortColumn == "telefon" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "telefon" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "telefon" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Email
+                        <a href="@Url.Action("Index", new { sortColumn = "email", sortDir = ViewBag.SortColumn == "email" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "email" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "email" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>
+                        Adres
+                        <a href="@Url.Action("Index", new { sortColumn = "adres", sortDir = ViewBag.SortColumn == "adres" && ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortColumn == "adres" && ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "adres" ? ViewBag.SortDir : "")"></a>
+                    </th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Henüz tedarikçi eklenmemiş.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var tedarikci in Model)
+                    {
+                        <tr>
+                            <td>@tedarikci.tedarikci_ID</td>
+                            <td>@tedarikci.tedarikci_adi</td>
+                            <td>@tedarikci.telefon</td>
+                            <td>@tedarikci.email</td>
+                            <td>@tedarikci.adres</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("TedarikciUrunleri", "Tedarik", new { tedarikci_id = tedarikci.tedarikci_ID })" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-box-open"></i> Ürünlere Git
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+﻿@model IEnumerable<BeyazEsyaE_Ticaret.tbl_urun>
+
+@{
+    ViewBag.Title = "Tedarikçi Ürünleri";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+    <h3><i class="fas fa-truck text-primary me-2"></i> Tüm Ürünler - <span class="text-dark">@ViewBag.TedarikciAdi</span></h3>
+    <a href="@Url.Action("Index", "Tedarik")" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Tedarikçi Listesine Dön
+    </a>
+</div>
+
+<!-- Filtreleme butonu -->
+<div class="mb-3">
+    <button type="button"
+            class="btn btn-outline-primary"
+            id="tedarikFiltreBtn"
+            data-bs-toggle="popover"
+            data-bs-trigger="click"
+            data-bs-html="true"
+            data-bs-content="tedarikFiltreTemplate"
+            data-base-url="@Url.Action("TedarikciUrunleri","Tedarik", new { tedarikci_id = ViewBag.TedarikciID })">
+        <i class="fas fa-filter"></i> Filtrele
+    </button>
+</div>
+
+<!-- Filtreleme şablonu -->
+<div id="tedarikFiltreTemplate" class="d-none">
+    <!-- Marka filterleri-->
+    <div class="mb-2">
+        <label class="form-label">Marka</label>
+        <div class="filtre-scroll">
+            @foreach (var m in (IEnumerable<BeyazEsyaE_Ticaret.tbl_marka>)ViewBag.Markalar)
+            {
+                var secili = ((List<int>)ViewBag.SeciliMarkalar)?.Contains(m.marka_ID) == true;
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="marka" value="@m.marka_ID" id="marka_@m.marka_ID" @(secili ? "checked" : "") />
+                    <label class="form-check-label" for="marka_@m.marka_ID">
+                        @m.marka_adi
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- Kategori filtreleri -->
+    <div class="mb-2">
+        <label class="form-label">Kategori</label>
+        <div class="filtre-scroll">
+            @foreach (var k in (IEnumerable<BeyazEsyaE_Ticaret.tbl_kategori>)ViewBag.Kategoriler)
+            {
+                var secili = (int?)ViewBag.SeciliKategori == k.kategori_ID;
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="kategori" value="@k.kategori_ID" id="kategori_@k.kategori_ID" @(secili ? "checked" : "") />
+                    <label class="form-check-label" for="kategori_@k.kategori_ID">
+                        @k.kategori_adi
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 mt-2">
+        <button type="button" class="btn btn-primary" data-act="apply">
+            <i class="fas fa-filter"></i> Filtrele
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-act="clear">Temizle</button>
+    </div>
+</div>
+
+<!-- Tedarikçi ürün listesi -->
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">Sistemde ürün bulunmamaktadır.</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var urun in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(urun.gorsel))
+                    {
+                        <img src="@Url.Content(urun.gorsel)" class="card-img-top urun-kart-gorsel" onclick="openLightbox(this)" />
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted mt-3">Görsel Yok</div>
+                    }
+
+                    <div class="card-body">
+                        @{
+                            var maliyetler = ViewBag.BirimMaliyetler as Dictionary<int, decimal>;
+                        }
+
+                        <h5 class="card-title">@urun.urun_adi</h5>
+
+                        <p class="mb-1"><strong>Kategori:</strong> @urun.tbl_kategori.kategori_adi</p>
+                        <p class="mb-1"><strong>Marka:</strong> @urun.tbl_marka.marka_adi</p>
+                        <p class="mb-1"><strong>Model:</strong> @urun.tbl_model.model_adi</p>
+                        <p class="mb-1"><strong>Stok:</strong> @urun.mevcut_stok</p>
+                        <p class="mb-1">
+                            <strong>Açıklama:</strong>
+                            @if (!string.IsNullOrEmpty(urun.aciklama))
+                            {
+                                @Html.Raw(urun.aciklama.Length > 100 ? urun.aciklama.Substring(0, 100) + "..." : urun.aciklama)
+                            }
+                            else
+                            {
+                                <span class="text-muted">Açıklama yok</span>
+                            }
+                        </p>
+                        <p class="mb-1">
+                            <strong>Güncel Birim Maliyet:</strong>
+                            @if (maliyetler != null && maliyetler.ContainsKey(urun.urun_ID))
+                            {
+                                <text>@string.Format("{0:N2} ₺", maliyetler[urun.urun_ID])</text>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Yok</span>
+                            }
+                        </p>
+
+                    </div>
+
+                    <div class="card-footer text-end bg-white">
+                        <a href="@Url.Action("StokGuncelle", "Tedarik", new { urun_id = urun.urun_ID, tedarikci_id = ViewBag.TedarikciID })"
+                           class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Stok Güncelle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

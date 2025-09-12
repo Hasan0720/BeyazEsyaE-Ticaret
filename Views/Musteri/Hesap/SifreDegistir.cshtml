@@ -1,0 +1,79 @@
+﻿@model BeyazEsyaE_Ticaret.Models.SifreDegistirViewModel
+@{
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+<a href="/Hesap/Index" class="btn btn-outline-secondary mt-3">
+    <i class="fa-solid fa-arrow-left me-1"></i> Geri Dön
+</a>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="text-center mb-4">
+            <h2 class="text-success fw-bold">
+                <i class="fa-solid fa-key me-2"></i> Şifre Değiştir
+            </h2>
+            <p class="text-muted">
+                Mevcut şifrenizi girerek yeni bir şifre belirleyebilirsiniz.
+            </p>
+            <hr class="w-50 mx-auto" />
+        </div>
+
+        <!-- Şifre değiştirme formu -->
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body p-4">
+
+                @using (Html.BeginForm("SifreDegistir", "Hesap", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3 position-relative">
+                        <label class="form-label fw-semibold">
+                            <i class="fa-solid fa-lock me-1 text-secondary"></i> Mevcut Şifreniz
+                        </label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.EskiSifre, new { @class = "form-control", @placeholder = "Mevcut şifrenizi girin", required = "required", @id = "EskiSifre" })
+                            <span class="input-group-text toggle-password" data-target="EskiSifre">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.EskiSifre, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                        <label class="form-label fw-semibold">
+                            <i class="fa-solid fa-key me-1 text-secondary"></i> Yeni Şifre
+                        </label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.YeniSifre, new { @class = "form-control", @placeholder = "Yeni şifre belirleyin", required = "required", @id = "YeniSifre" })
+                            <span class="input-group-text toggle-password" data-target="YeniSifre">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.YeniSifre, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-4 position-relative">
+                        <label class="form-label fw-semibold">
+                            <i class="fa-solid fa-key me-1 text-secondary"></i> Yeni Şifre (Tekrar)
+                        </label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.YeniSifreTekrar, new { @class = "form-control", @placeholder = "Yeni şifreyi tekrar girin", required = "required", @id = "YeniSifreTekrar" })
+                            <span class="input-group-text toggle-password" data-target="YeniSifreTekrar">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.YeniSifreTekrar, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-circle-check me-1"></i> Şifreyi Güncelle
+                        </button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

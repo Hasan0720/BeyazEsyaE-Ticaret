@@ -1,0 +1,102 @@
+﻿@model BeyazEsyaE_Ticaret.Models.SiparisDetayViewModel
+@{
+    ViewBag.Title = "Sipariş Detayı";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+<a href="/Hesap/SiparisGecmisi" class="btn btn-outline-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-1"></i> Geri Dön
+</a>
+
+<h2 class="mb-4">Sipariş Detayı</h2>
+
+<!-- Sipariş bilgileri -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row gy-3">
+            <div class="col-md-6">
+                <p><strong>Sipariş Tarihi:</strong> @Model.SiparisTarihi.ToShortDateString()</p>
+                <p>
+                    <strong>Durum:</strong>
+                    @switch (Model.SiparisDurumu)
+                    {
+                        case "Hazırlanıyor":
+                            <span class="badge bg-warning text-dark">⏳ Hazırlanıyor</span>; break;
+                        case "Kargoya Verildi":
+                            <span class="badge bg-info text-dark">📦 Kargoya Verildi</span>; break;
+                        case "Teslim Edildi":
+                            <span class="badge bg-primary">✔ Teslim Edildi</span>; break;
+                        case "Faturalandı":
+                            <span class="badge bg-success">🧾 Faturalandı</span>; break;
+                        default:
+                            <span class="badge bg-secondary">@Model.SiparisDurumu</span>; break;
+                    }
+                </p>
+                <p><strong>Teslimat Adresi:</strong> @Model.TeslimatAdresi</p>
+
+                <!-- Ftura oluşturma butonu -->
+                @if (Model.FaturaID.HasValue)
+                {
+                    <a href="@Url.Action("DisaAktar", "Hesap", new { id = Model.FaturaID.Value })"
+                       class="btn btn-outline-dark faturayi-goruntule-btn"
+                       data-fatura-id="@Model.FaturaID.Value">
+                        🧾 Faturayı Görüntüle
+                    </a>
+                }
+                else
+                {
+                    <p class="text-muted mt-2 fst-italic">Fatura henüz oluşturulmamış.</p>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="border p-3 rounded bg-light">
+                    <p><strong>Ara Toplam:</strong> @Model.AraToplam.ToString("C")</p>
+                    <p><strong>KDV (%20):</strong> @Model.KdvTutar.ToString("C")</p>
+                    <p class="fw-bold"><strong>Genel Toplam:</strong> @Model.GenelToplam.ToString("C")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Siaprişe dahil olan ürünler -->
+<h4 class="mb-3">Siparişe Dahil Ürünler</h4>
+<div class="row">
+    <div class="d-flex flex-row overflow-auto">
+        @foreach (var urun in Model.Urunler)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <img src="@urun.Gorsel" class="card-img-top p-3 urun-gorsel" alt="@urun.UrunAdi" onclick="openLightbox(this)" />
+                    @if (urun.Aktiflik)
+                    {
+                        <a href="@Url.Action("UrunDetay", "MusteriUrun", new { id = urun.UrunID })" class="text-decoration-none text-dark">
+                            <div class="card-body">
+                                <h5 class="card-title">@urun.UrunAdi</h5>
+                                <p class="card-text mb-1">Adet: <strong>@urun.Adet</strong></p>
+                                <p class="card-text mb-1">Birim Fiyat: <strong>@urun.BirimFiyat.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</strong></p>
+                                <p class="fw-bold">Toplam Fiyat (KDV Dahil): @((urun.ToplamFiyat * 1.20m).ToString("C", new System.Globalization.CultureInfo("tr-TR")))</p>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger position-absolute top-0 end-0 m-2">Pasif Ürün</span>
+
+                        <div class="card-body text-muted">
+                            <h5 class="card-title">@urun.UrunAdi</h5>
+                            <p class="card-text mb-1">Adet: <strong>@urun.Adet</strong></p>
+                            <p class="card-text mb-1">Birim Fiyat: <strong>@urun.BirimFiyat.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</strong></p>
+                            <p class="fw-bold">Toplam Fiyat (KDV Dahil): @((urun.ToplamFiyat * 1.20m).ToString("C", new System.Globalization.CultureInfo("tr-TR")))</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>

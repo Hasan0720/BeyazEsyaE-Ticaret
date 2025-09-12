@@ -1,0 +1,151 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beyaz Vitrin - @ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/Content/musteri_style.css" />
+    <link rel="icon" type="image/x-icon" href="~/Content/logo.ico" />
+</head>
+<body>
+    <div class="d-flex flex-column min-vh-100">
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Beyaz Vitrin</a>
+
+                <!-- Mobil görünümde kullanıalcak menü butonu -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Menüyü Aç/Kapat">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menü içerikleri sol kısım-->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Musteri/Index">
+                                <i class="fa-solid fa-house"></i> Ana Sayfa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/MusteriUrun/Index">
+                                <i class="fa-solid fa-store"></i> Ürünler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Iletisim/Index">
+                                <i class="fa-solid fa-message"></i> İletişim
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Arama alanı -->
+                    @if (ViewBag.AramaGoster == true)
+                    {
+                        <form class="d-flex ms-auto me-2" role="search" method="get" action="@ViewBag.AramaURL">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="q" placeholder="Ara..." aria-label="Ara" value="@Request["q"]">
+                                <button class="btn btn-outline-light" type="submit">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
+                    }
+
+                    <!-- Menü içerikleri sağ kısım -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item d-flex justify-content-between align-items-center">
+                            <a class="nav-link position-relative" href="/Sepet/Index">
+                                <i class="fa-solid fa-cart-shopping"></i> Sepet
+                                <span id="cart-item-count" class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
+                                    0 <span class="visually-hidden">sepetteki ürün sayısı</span>
+                                </span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            @if (Session["kullaniciID"] != null)
+                            {
+                                <a class="nav-link dropdown-toggle" href="#" id="hesapDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-user"></i> Hesabım
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="hesapDropdown">
+                                    <li><a class="dropdown-item" href="/Hesap/Index">Profil Bilgileri</a></li>
+                                    <li><a class="dropdown-item" href="/Hesap/SiparisGecmisi">Sipariş Geçmişi</a></li>
+                                    <li><a class="dropdown-item" href="/Hesap/BilgileriGuncelle">Bilgileri Güncelle</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/Giris/Cikis">Çıkış Yap</a></li>
+                                </ul>
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="/Giris/Giris">
+                                    <i class="fa-solid fa-circle-user"></i> Giriş Yap
+                                </a>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Sayfa içeriği -->
+        <div class="container mt-4">
+            <!-- Başarı / bilgilendirme / uyarı mesajları -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show dinamik-alert" role="alert">
+                    <i class="fa-solid fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show dinamik-alert" role="alert">
+                    <i class="fa-solid fa-circle-info"></i> @TempData["InfoMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["WarningMessage"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show dinamik-alert" role="alert">
+                    <i class="fa-solid fa-circle-warning"></i> @TempData["WarningMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- AJAX mesajları için boş container -->
+            <div id="ajax-mesaj-container"></div>
+            @RenderBody()
+        </div>
+
+        <footer class="footer mt-auto py-4 bg-dark text-light">
+            <div class="text-center">
+                <p class="mb-1">© 2025 Beyaz Vitrin</p>
+                <p class="mb-0">
+                    Tüm hakları saklıdır |
+                    <a href="/Iletisim/Index" class="text-warning text-decoration-none">İletişim</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/musteri_script.js"></script>
+</body>
+</html>

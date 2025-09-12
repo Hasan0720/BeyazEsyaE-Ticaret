@@ -1,0 +1,101 @@
+﻿@model BeyazEsyaE_Ticaret.tbl_siparis
+
+@{
+    ViewBag.Title = "Sipariş Durumu Güncelle";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+    <h3><i class="fas fa-edit text-success me-2"></i>Sipariş Durumu Güncelle</h3>
+    <a href="@Url.Action("Index", "Siparis")" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Sipariş Listesine Dön
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <strong><i class="fas fa-shopping-cart"></i> Sipariş Bilgileri</strong>
+            </div>
+
+            <!-- Sipariş durum düzenleme formu -->
+            <div class="card-body">
+                <p><strong>Sipariş ID:</strong> @Model.siparis_ID</p>
+                <p><strong>Tarih:</strong> @Model.siparis_tarihi.ToString("dd.MM.yyyy HH:mm")</p>
+                <p><strong>Müşteri:</strong> @Model.tbl_kullanici.ad @Model.tbl_kullanici.soyad</p>
+
+                <p class="fw-bold mb-2">Ürünler:</p>
+                <div class="bg-light border rounded p-3">
+                    @foreach (var detay in Model.tbl_siparisDetay)
+                    {
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                            <span>@detay.tbl_urun.urun_adi</span>
+                            <span class="badge bg-secondary">Adet: @detay.adet</span>
+                        </div>
+                    }
+                </div>
+
+                <p class="mt-3"><strong>Toplam Tutar:</strong> @string.Format("{0:C}", Model.toplam_tutar)</p>
+                <p><strong>Teslimat Adresi:</strong> @Model.teslimat_adresi</p>
+                <p>
+                    <strong>Mevcut Durum:</strong>
+                    <span class="badge bg-warning text-dark">@Model.tbl_siparisDurum.durum_adi</span>
+                </p>
+
+                <hr class="my-4" />
+
+                <form method="post" action="@Url.Action("SiparisDurumDuzenle", "Siparis")">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("siparis_ID", Model.siparis_ID)
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Yeni Durum</label>
+                        <select name="yeniDurum_ID" class="form-select">
+                            @foreach (var durum in ViewBag.TumDurumlar as List<tbl_siparisDurum>)
+                            {
+                                var isDisabled = durum.siparisDurum_ID == 4 || durum.siparisDurum_ID < Model.siparisDurum_ID;
+                                <option value="@durum.siparisDurum_ID"
+                                        @(isDisabled ? "disabled" : "")
+                                        @(durum.siparisDurum_ID == Model.siparisDurum_ID ? "selected" : "")>
+                                    @durum.durum_adi
+                                </option>
+                            }
+                        </select>
+
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle me-1"></i> Güncelle
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilgilendirme kartı-->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <i class="fas fa-info-circle text-primary"></i> Bilgilendirme
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Bu sayfada yalnızca mevcut bir siparişin durumu güncellenebilir.
+                </p>
+                <p class="card-text">
+                    Siparişe ait ürünler ve mevcut bilgiler yalnızca görüntülenmek içindir.
+                </p>
+                <p class="card-text">
+                    Eğer sipariş zaten <strong>“Teslim Edildi”</strong> durumundaysa herhangi bir işlem yapılamaz.
+                </p>
+                <hr />
+                <p class="text-muted">
+                    Durum seçimi yalnızca bir sonraki aşamaya geçişi içerir. Geriye dönüş yapılamaz.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<BeyazEsyaE_Ticaret.tbl_kategori>
+
+@{
+    ViewBag.Title = "Kategori Listesi";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Kategori Listesi</h2>
+        <a href="@Url.Action("KategoriEkle", "Kategori")" class="btn btn-success">
+            <i class="fa fa-plus"></i> Kategori Ekle
+        </a>
+    </div>
+
+    <!-- Kategori sayısı hesaplaması -->
+    <p class="text-muted mb-3">
+        Toplam kategori: <strong>@(Model?.Count() ?? 0)</strong>
+    </p>
+
+    <!-- Kategori tablosu -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped genel-tablo-stil" id="myTable">
+            <thead>
+                <tr>
+                    <th style="width:10%">ID</th>
+                    <th>
+                        Kategori Adı
+                        <a href="@Url.Action("Index", new { sortColumn = "kategori_adi", sortDir = ViewBag.SortDir == "asc" ? "desc" : (ViewBag.SortDir == "desc" ? "" : "asc") })"
+                           class="sort-btn @(ViewBag.SortColumn == "kategori_adi" ? ViewBag.SortDir : "")">
+                        </a>
+                    </th>
+                    <th style="width:25%">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Henüz kategori eklenmemiş.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var kategori in Model)
+                    {
+                        <tr>
+                            <td>@kategori.kategori_ID</td>
+                            <td>@kategori.kategori_adi</td>
+                            <td>
+                                <a href="@Url.Action("KategoriDuzenle", "Kategori", new { id = kategori.kategori_ID })" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-edit"></i> Düzenle
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

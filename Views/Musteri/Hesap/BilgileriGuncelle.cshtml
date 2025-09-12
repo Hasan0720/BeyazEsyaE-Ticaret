@@ -1,0 +1,81 @@
+﻿@model BeyazEsyaE_Ticaret.Models.HesapViewModel
+@{
+    ViewBag.Title = "Hesap Bilgilerini Güncelle";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+<a href="/Hesap/Index" class="btn btn-outline-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-1"></i> Geri Dön
+</a>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="text-center mb-4">
+            <h2 class="text-primary fw-bold">
+                <i class="fa-solid fa-user-pen me-2"></i> Bilgileri Güncelle
+            </h2>
+            <p class="text-muted">
+                Bu sayfa üzerinden ad, soyad, telefon, e-posta ve adres bilgilerinizi güncelleyebilirsiniz.<br />Lütfen bilgilerinizi doğru ve eksiksiz girdiğinize emin olunuz.
+            </p>
+            <hr class="w-50 mx-auto" />
+        </div>
+
+        <!-- Bilgileri güncelleme formu -->
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body p-4">
+
+                @using (Html.BeginForm("BilgileriGuncelle", "Hesap", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.TextBoxFor(m => m.Ad, new { @class = "form-control", placeholder = "Ad" })
+                                @Html.LabelFor(m => m.Ad)
+                                @Html.ValidationMessageFor(m => m.Ad, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.TextBoxFor(m => m.Soyad, new { @class = "form-control", placeholder = "Soyad" })
+                                @Html.LabelFor(m => m.Soyad)
+                                @Html.ValidationMessageFor(m => m.Soyad, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.TextBoxFor(m => m.Telefon, new { @class = "form-control", placeholder = "Telefon", type = "tel" })
+                                @Html.LabelFor(m => m.Telefon)
+                                @Html.ValidationMessageFor(m => m.Telefon, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "E-posta", type = "email" })
+                                @Html.LabelFor(m => m.Email)
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                @Html.TextAreaFor(m => m.Adres, new { @class = "form-control", placeholder = "Adres" })
+                                @Html.LabelFor(m => m.Adres)
+                                @Html.ValidationMessageFor(m => m.Adres, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-warning" onclick="document.querySelector('form').reset();">
+                            <i class="fas fa-eraser"></i> Sıfırla
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Kaydet
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

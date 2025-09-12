@@ -1,0 +1,150 @@
+﻿@model BeyazEsyaE_Ticaret.Models.FaturaIndexViewModel
+
+@{
+    ViewBag.Title = "Fatura Yönetimi";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Fatura Listesi</h2>
+    </div>
+
+    <!-- Faturası oluşturulmamış sipariş sayısı hesaplaması -->
+    <p class="text-muted mb-2">
+        Fatura oluşturulmamış siparişler:
+        <strong>@(Model?.Faturalanmayanlar.Count ?? 0)</strong>
+    </p>
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <strong><i class="fas fa-hourglass-half"></i> Faturası Oluşturulmamış Siparişler</strong>
+        </div>
+
+        <!-- Faturası oluşturulmamış siparişler tablosu -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped genel-tablo-stil">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>
+                            Müşteri
+                            <a href="@Url.Action("Index", new { sortColumnF = "musteri", sortDirF = ViewBag.sortColumnF == "musteri" && ViewBag.sortDirF == "asc" ? "desc" : (ViewBag.sortDirF == "desc" ? "" : "asc"), sortColumnO = ViewBag.sortColumnO, sortDirO = ViewBag.sortDirO })"
+                               class="sort-btn @(ViewBag.sortColumnF == "musteri" ? ViewBag.sortDirF : "")"></a>
+                        </th>
+                        <th>
+                            Toplam Tutar
+                            <a href="@Url.Action("Index", new { sortColumnF = "toplam_tutar", sortDirF = ViewBag.sortColumnF == "toplam_tutar" && ViewBag.sortDirF == "asc" ? "desc" : (ViewBag.sortDirF == "desc" ? "" : "asc"), sortColumnO = ViewBag.sortColumnO, sortDirO = ViewBag.sortDirO })"
+                               class="sort-btn @(ViewBag.sortColumnF == "toplam_tutar" ? ViewBag.sortDirF : "")"></a>
+                        </th>
+                        <th>
+                            Teslimat Adresi
+                            <a href="@Url.Action("Index", new { sortColumnF = "teslimat_adresi", sortDirF = ViewBag.sortColumnF == "teslimat_adresi" && ViewBag.sortDirF == "asc" ? "desc" : (ViewBag.sortDirF == "desc" ? "" : "asc"), sortColumnO = ViewBag.sortColumnO, sortDirO = ViewBag.sortDirO })"
+                               class="sort-btn @(ViewBag.sortColumnF == "teslimat_adresi" ? ViewBag.sortDirF : "")"></a>
+                        </th>
+                        <th>
+                            Tarih
+                            <a href="@Url.Action("Index", new { sortColumnF = "tarih", sortDirF = ViewBag.sortColumnF == "tarih" && ViewBag.sortDirF == "asc" ? "desc" : (ViewBag.sortDirF == "desc" ? "" : "asc"), sortColumnO = ViewBag.sortColumnO, sortDirO = ViewBag.sortDirO })"
+                               class="sort-btn @(ViewBag.sortColumnF == "tarih" ? ViewBag.sortDirF : "")"></a>
+                        </th>
+
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Faturalanmayanlar == null || Model.Faturalanmayanlar.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Henüz faturalandırılmamış sipariş yok.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var siparis in Model.Faturalanmayanlar)
+                        {
+                            <tr>
+                                <td>@siparis.siparis_ID</td>
+                                <td>@(siparis.tbl_kullanici.ad + " " + siparis.tbl_kullanici.soyad)</td>
+                                <td data-sort="@siparis.toplam_tutar.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                    @string.Format("{0:C}", siparis.toplam_tutar)
+                                </td>
+                                <td>@siparis.teslimat_adresi</td>
+                                <td data-sort="@(((DateTimeOffset)siparis.siparis_tarihi).ToUnixTimeMilliseconds())">
+                                    @siparis.siparis_tarihi.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("FaturaOlustur", "Fatura", new { id = siparis.siparis_ID })" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-plus"></i> Fatura Oluştur
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Oluşturulmuş fatura sayısı hesaplama -->
+    <p class="text-muted mb-2">
+        Oluşturulan faturalar:
+        <strong>@(Model?.Faturalar.Count ?? 0)</strong>
+    </p>
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <strong><i class="fa-solid fa-file-invoice"></i> Oluşturulmuş Faturalar</strong>
+        </div>
+
+        <!-- Oluşturulmuş faturalar tablosu -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped genel-tablo-stil">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sipariş ID</th>
+                        <th>
+                            Fatura Tarihi
+                            <a href="@Url.Action("Index", new { sortColumnO = "fatura_tarihi", sortDirO = ViewBag.sortColumnO == "fatura_tarihi" && ViewBag.sortDirO == "asc" ? "desc" : (ViewBag.sortDirO == "desc" ? "" : "asc"), sortColumnF = ViewBag.sortColumnF, sortDirF = ViewBag.sortDirF })"
+                               class="sort-btn @(ViewBag.sortColumnO == "fatura_tarihi" ? ViewBag.sortDirO : "")"></a>
+                        </th>
+                        <th>
+                            Toplam Tutar
+                            <a href="@Url.Action("Index", new { sortColumnO = "toplam_tutar", sortDirO = ViewBag.sortColumnO == "toplam_tutar" && ViewBag.sortDirO == "asc" ? "desc" : (ViewBag.sortDirO == "desc" ? "" : "asc"), sortColumnF = ViewBag.sortColumnF, sortDirF = ViewBag.sortDirF })"
+                               class="sort-btn @(ViewBag.sortColumnO == "toplam_tutar" ? ViewBag.sortDirO : "")"></a>
+                        </th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Faturalar == null || Model.Faturalar.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Henüz oluşturulmuş fatura yok.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var fatura in Model.Faturalar)
+                        {
+                            <tr>
+                                <td>@fatura.fatura_ID</td>
+                                <td>@fatura.siparis_ID</td>
+                                <td data-sort="@(((DateTimeOffset)fatura.fatura_tarihi).ToUnixTimeMilliseconds())">
+                                    @fatura.fatura_tarihi.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                                <td data-sort="@fatura.toplam_tutar.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                    @string.Format("{0:C}", fatura.toplam_tutar)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("DisaAktar", "Fatura", new { id = fatura.fatura_ID })"
+                                       class="btn btn-sm btn-success fatura-disa-aktar-btn">
+                                        🧾 Dışa Aktar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

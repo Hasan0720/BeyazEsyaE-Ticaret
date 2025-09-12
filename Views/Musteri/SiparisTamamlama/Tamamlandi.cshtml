@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Sipariş Tamamlandı";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<div class="text-center mt-5">
+    <i class="fa fa-check-circle fa-4x text-success mb-3"></i>
+    <h2 class="fw-bold">Siparişiniz Başarıyla Alındı!</h2>
+    <p class="mt-3 fs-5">Siparişiniz alınmıştır. En kısa sürede kargoya verilecektir.</p>
+
+    <a href="@Url.Action("Index", "MusteriUrun")" class="btn btn-primary mt-4 px-4">
+        <i class="fa fa-home me-2"></i> Alışverişe Devam Et
+    </a>
+</div>

@@ -1,0 +1,50 @@
+﻿@model BeyazEsyaE_Ticaret.Models.IletisimViewModel
+
+@{
+    ViewBag.Title = "İletişim";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<div class="w3-container w3-white w3-padding-32 w3-round-large w3-card ">
+    <h2 class="w3-text-black" style="font-weight: 600;">Bizimle İletişime Geçin</h2>
+    <p class="w3-text-gray" style="font-style: italic;">Sorularınız veya geri bildirimleriniz için buradayız!</p>
+
+    <!-- İletişim bilgileri -->
+    <div class="w3-margin-bottom w3-padding-small" >
+        <p><i class="fa fa-map-marker w3-margin-right" ></i> Antalya, Türkiye</p>
+        <p><i class="fa fa-phone w3-margin-right" ></i> Telefon: +90 212 123 45 67</p>
+        <p><i class="fa fa-envelope w3-margin-right" ></i> Email: beyazvitrin0@gmail.com</p>
+    </div>
+
+    <!-- İletişim formu -->
+    @using (Html.BeginForm("Index", "Iletisim", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+<div class="w3-margin-bottom">
+    <label class="w3-text-gray">Ad</label>
+    @Html.TextBoxFor(m => m.Ad, new { @class = "w3-input w3-border w3-round", placeholder = "Adınız" })
+    @Html.ValidationMessageFor(m => m.Ad, "", new { @class = "text-danger" })
+</div>
+
+<div class="w3-margin-bottom">
+    <label class="w3-text-gray">Soyad</label>
+    @Html.TextBoxFor(m => m.Soyad, new { @class = "w3-input w3-border w3-round", placeholder = "Soyadınız" })
+    @Html.ValidationMessageFor(m => m.Soyad, "", new { @class = "text-danger" })
+</div>
+
+<div class="w3-margin-bottom">
+    <label class="w3-text-gray">Email</label>
+    @Html.TextBoxFor(m => m.Email, new { @class = "w3-input w3-border w3-round", placeholder = "Email adresiniz", type = "email" })
+    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+</div>
+
+<div class="w3-margin-bottom">
+    <label class="w3-text-gray">Mesaj</label>
+    @Html.TextAreaFor(m => m.Mesaj, new { @class = "w3-input w3-border w3-round", placeholder = "Mesajınız", rows = "5" })
+    @Html.ValidationMessageFor(m => m.Mesaj, "", new { @class = "text-danger" })
+</div>
+
+        <button class="w3-button w3-indigo w3-block w3-round" type="submit" >Mesajı Gönder</button>
+    }
+</div>

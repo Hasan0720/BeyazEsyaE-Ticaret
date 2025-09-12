@@ -1,0 +1,225 @@
+﻿@model BeyazEsyaE_Ticaret.tbl_urun
+
+@{
+    ViewBag.Title = "Ürün Ekleme";
+    Layout = "~/Views/Shared/_YoneticiLayout.cshtml";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+    <h3><i class="fas fa-plus-circle text-success me-2"></i>Yeni Ürün Ekleme</h3>
+    <a href="@Url.Action("Index", "Urun")" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Ürün Listesine Dön
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <strong><i class="fas fa-box"></i> Ürün Bilgileri</strong>
+            </div>
+
+            <!-- Ürün ekleme formu-->
+            <div class="card-body">
+                @using (Html.BeginForm("UrunEkle", "Urun", FormMethod.Post, new { @id = "urunEkleForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.urun_adi, "Ürün Adı", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(model => model.urun_adi, new { @class = "form-control", @placeholder = "Ürün adını giriniz" })
+                        @Html.ValidationMessageFor(m => m.urun_adi, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Kategori</label>
+                        <div class="select-container">
+                            @Html.DropDownListFor(model => model.kategori_ID, (SelectList)ViewBag.Kategoriler, "-- Kategori Seçiniz --", new { @class = "form-control custom-select" })
+                            <i class="fas fa-caret-down select-icon"></i>
+                            @Html.ValidationMessageFor(m => m.kategori_ID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Marka</label>
+                        <div class="select-container">
+                            @Html.DropDownListFor(model => model.marka_ID, (SelectList)ViewBag.Markalar, "-- Marka Seçiniz --", new { @class = "form-control custom-select" })
+                            <i class="fas fa-caret-down select-icon"></i>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#markaModal">
+                            + Yeni Marka Ekle
+                        </a>
+                        <br />
+                        @Html.ValidationMessageFor(m => m.marka_ID, "", new { @class = "text-danger" })
+
+                        <!-- Marka Ekle Modal -->
+                        <div class="modal fade" id="markaModal" tabindex="-1" aria-labelledby="markaModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="markaModalLabel">Yeni Marka Ekle</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" id="yeniMarkaAdi" class="form-control" placeholder="Marka adı giriniz" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="markaEkle()">Ekle</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">Model</label>
+                        <div class="select-container">
+                            @Html.DropDownListFor(model => model.model_ID, (SelectList)ViewBag.Modeller, "-- Model Seçiniz --", new { @class = "form-control custom-select" })
+                            <i class="fas fa-caret-down select-icon"></i>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#modelModal">
+                            + Yeni Model Ekle
+                        </a>
+                        <br />
+                        @Html.ValidationMessageFor(m => m.model_ID, "", new { @class = "text-danger" })
+
+                        <!-- Model Ekle Modal -->
+                        <div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modelModalLabel">Yeni Model Ekle</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-2">
+                                            <label for="modelMarkaSelect" class="form-label fw-bold">Marka Seçin</label>
+                                            <select id="modelMarkaSelect" class="form-control">
+                                                <option value="">-- Marka Seçiniz --</option>
+                                                @foreach (var marka in ViewBag.Markalar as SelectList)
+                                                {
+                                                    <option value="@marka.Value">@marka.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label for="yeniModelAdi" class="form-label fw-bold">Model Adı</label>
+                                            <input type="text" id="yeniModelAdi" class="form-control" placeholder="Model adı giriniz" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="modelEkle()">Ekle</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.aciklama, "Açıklama", new { @class = "form-label fw-bold" })
+                        @Html.TextAreaFor(model => model.aciklama, 3, 50, new { @class = "form-control", @placeholder = "Ürün açıklaması...", @id = "aciklama" })
+                        @Html.ValidationMessageFor(m => m.aciklama, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.mevcut_stok, "Mevcut Stok", new { @class = "form-label fw-bold" })
+
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.mevcut_stok, new { @class = "form-control", @type = "number", @min = "0", @id = "stok", @placeHolder = "0", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.fiyat, "Fiyat", new { @class = "form-label fw-bold" })
+
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.fiyat, new { @class = "form-control", @type = "number", @step = "0.1", @min = "0", @id = "fiyat", @placeholder = "Örn: 9999.99" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.fiyat, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.Label("Görsel", new { @class = "form-label fw-bold" })
+
+                        <div id="drop-area" class="border border-secondary rounded text-center p-4 bg-light position-relative">
+                            <div id="drop-default">
+                                <p><i class="fas fa-cloud-upload-alt fa-2x mb-2"></i></p>
+                                <p>Görseli buraya sürükleyin veya tıklayın</p>
+                            </div>
+
+                            <div id="preview-container" class="d-none position-relative">
+                                <img id="preview-image" src="#" alt="Önizleme" class="img-fluid rounded" />
+                                <button type="button" id="btn-remove-image" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <input type="file" id="fileElem" accept="image/*" style="display:none" />
+                        </div>
+                        @Html.ValidationMessageFor(m => m.gorsel, "", new { @class = "text-danger d-block mt-1" })
+
+                        @Html.HiddenFor(model => model.gorsel, new { @id = "gorsel" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.Label("Öne Çıkan mı?", new { @class = "form-label fw-bold" })
+                        <div>
+                            <label class="me-3">@Html.RadioButtonFor(model => model.oneCikan_mi, true) Evet</label>
+                            <label>@Html.RadioButtonFor(model => model.oneCikan_mi, false) Hayır</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        @Html.Label("Aktif mi?", new { @class = "form-label fw-bold" })
+                        <div>
+                            <label class="me-3">@Html.RadioButtonFor(model => model.aktif_mi, true) Aktif</label>
+                            <label>@Html.RadioButtonFor(model => model.aktif_mi, false) Pasif</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                        <button type="reset" class="btn btn-warning">
+                            <i class="fas fa-eraser"></i> Temizle
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilgilendirme kartı-->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <i class="fas fa-info-circle text-primary"></i> Bilgilendirme
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Bu form aracılığıyla sisteme yeni bir ürün ekleyebilirsiniz. Lütfen tüm alanları eksiksiz ve doğru şekilde doldurunuz.
+                </p>
+                <p class="card-text">
+                    Marka ve model listede bulunmuyorsa, sağlanan bağlantılar aracılığıyla yeni tanım yapabilirsiniz.
+                </p>
+                <p class="card-text">
+                    Görsel alanında, ürüne ait resmi sürükleyerek bırakabilir veya tıklayarak seçebilirsiniz.
+                </p>
+                <p class="card-text">
+                    “Öne çıkan mı?” seçeneği, ürünün ana sayfada vurgulanmasını sağlar.
+                </p>
+                <p class="card-text">
+                    “Aktif mi?” seçeneği ürünün müşteri tarafında görünüp görünmeyeceği belirlenir.
+                </p>
+                <hr />
+                <p class="card-text text-muted">
+                    Lütfen sistemde aynı bilgilerle kayıtlı bir ürün olmadığından emin olunuz.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

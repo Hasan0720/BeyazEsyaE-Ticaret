@@ -1,0 +1,73 @@
+﻿@model BeyazEsyaE_Ticaret.Models.KayitViewModel
+@{
+    ViewBag.Title = "Kaydol";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-xl-6 col-lg-7">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
+                <h3 class="text-center fw-bold mb-1">Beyaz Eşya E-Ticaret</h3>
+                <p class="text-center text-muted mb-4">Yeni hesap oluşturun</p>
+
+                <!-- Kayıt formu -->
+                @using (Html.BeginForm("Kayit", "Giris", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Ad, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.Ad, new { @class = "form-control form-control-lg", placeholder = "Adınız" })
+                            @Html.ValidationMessageFor(m => m.Ad, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Soyad, new { @class = "form-label fw-semibold" })
+                            @Html.TextBoxFor(m => m.Soyad, new { @class = "form-control form-control-lg", placeholder = "Soyadınız" })
+                            @Html.ValidationMessageFor(m => m.Soyad, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Email, "Email", new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", placeholder = "Email adresiniz" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Telefon, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.Telefon, new { @class = "form-control form-control-lg", type = "tel", placeholder = "Telefon numaranız" })
+                        @Html.ValidationMessageFor(m => m.Telefon, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Adres, new { @class = "form-label fw-semibold" })
+                        @Html.TextAreaFor(m => m.Adres, new { @class = "form-control form-control-lg", placeholder = "Adresiniz", rows = 3 })
+                        @Html.ValidationMessageFor(m => m.Adres, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Sifre, "Şifre", new { @class = "form-label fw-semibold" })
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.Sifre, new { @class = "form-control form-control-lg", placeholder = "Şifreniz", id = "KayitSifre", autocomplete = "new-password" })
+                            <span class="input-group-text toggle-password" data-target="KayitSifre" title="Göster/Gizle">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Sifre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">Kaydol</button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <span class="text-muted">Zaten hesabın var mı?</span>
+                        <a href="@Url.Action("Giris","Giris")" class="ms-1 text-decoration-none fw-semibold">Giriş Yap</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

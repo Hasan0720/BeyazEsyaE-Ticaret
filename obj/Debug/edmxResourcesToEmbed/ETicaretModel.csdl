@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tbl_fatura">
+    <Key>
+      <PropertyRef Name="fatura_ID" />
+    </Key>
+    <Property Name="fatura_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="siparis_ID" Type="Int32" Nullable="false" />
+    <Property Name="toplam_tutar" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="fatura_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="tbl_siparis" Relationship="Self.FK_tbl_fatura_tbl_siparis" FromRole="tbl_fatura" ToRole="tbl_siparis" />
+  </EntityType>
+  <EntityType Name="tbl_iletisim">
+    <Key>
+      <PropertyRef Name="iletisim_ID" />
+    </Key>
+    <Property Name="iletisim_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kullanici_ID" Type="Int32" Nullable="false" />
+    <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="mesaj" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="gonderim_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="tbl_kullanici" Relationship="Self.FK_tbl_iletisim_tbl_kullanici" FromRole="tbl_iletisim" ToRole="tbl_kullanici" />
+  </EntityType>
+  <EntityType Name="tbl_kategori">
+    <Key>
+      <PropertyRef Name="kategori_ID" />
+    </Key>
+    <Property Name="kategori_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kategori_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_urun_tbl_kategori" FromRole="tbl_kategori" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_kullanici">
+    <Key>
+      <PropertyRef Name="kullanici_ID" />
+    </Key>
+    <Property Name="kullanici_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="rol_ID" Type="Int32" Nullable="false" />
+    <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="telefon_no" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="adres" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="sifre" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="kayit_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="tbl_iletisim" Relationship="Self.FK_tbl_iletisim_tbl_kullanici" FromRole="tbl_kullanici" ToRole="tbl_iletisim" />
+    <NavigationProperty Name="tbl_rol" Relationship="Self.FK_tbl_kullanici_tbl_rol" FromRole="tbl_kullanici" ToRole="tbl_rol" />
+    <NavigationProperty Name="tbl_sepet" Relationship="Self.FK_tbl_sepet_tbl_kullanici" FromRole="tbl_kullanici" ToRole="tbl_sepet" />
+    <NavigationProperty Name="tbl_siparis" Relationship="Self.FK_tbl_siparis_tbl_kullanici" FromRole="tbl_kullanici" ToRole="tbl_siparis" />
+    <Property Name="reset_token_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="reset_token_sona_erme" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tbl_marka">
+    <Key>
+      <PropertyRef Name="marka_ID" />
+    </Key>
+    <Property Name="marka_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="marka_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_model" Relationship="Self.FK_tbl_model_tbl_marka" FromRole="tbl_marka" ToRole="tbl_model" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_urun_tbl_marka" FromRole="tbl_marka" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_model">
+    <Key>
+      <PropertyRef Name="model_ID" />
+    </Key>
+    <Property Name="model_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="marka_ID" Type="Int32" Nullable="false" />
+    <Property Name="model_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_marka" Relationship="Self.FK_tbl_model_tbl_marka" FromRole="tbl_model" ToRole="tbl_marka" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_urun_tbl_model" FromRole="tbl_model" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_rol">
+    <Key>
+      <PropertyRef Name="rol_ID" />
+    </Key>
+    <Property Name="rol_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="rol_adi" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_kullanici" Relationship="Self.FK_tbl_kullanici_tbl_rol" FromRole="tbl_rol" ToRole="tbl_kullanici" />
+  </EntityType>
+  <EntityType Name="tbl_sepet">
+    <Key>
+      <PropertyRef Name="sepet_ID" />
+    </Key>
+    <Property Name="sepet_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kullanici_ID" Type="Int32" Nullable="false" />
+    <Property Name="toplam_fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <NavigationProperty Name="tbl_kullanici" Relationship="Self.FK_tbl_sepet_tbl_kullanici" FromRole="tbl_sepet" ToRole="tbl_kullanici" />
+    <NavigationProperty Name="tbl_sepetDetay" Relationship="Self.FK_tbl_sepetDetay_tbl_sepet" FromRole="tbl_sepet" ToRole="tbl_sepetDetay" />
+  </EntityType>
+  <EntityType Name="tbl_sepetDetay">
+    <Key>
+      <PropertyRef Name="sepetDetay_ID" />
+    </Key>
+    <Property Name="sepetDetay_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sepet_ID" Type="Int32" Nullable="false" />
+    <Property Name="urun_ID" Type="Int32" Nullable="false" />
+    <Property Name="adet" Type="Byte" Nullable="false" />
+    <Property Name="birim_fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="toplam_fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <NavigationProperty Name="tbl_sepet" Relationship="Self.FK_tbl_sepetDetay_tbl_sepet" FromRole="tbl_sepetDetay" ToRole="tbl_sepet" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_sepetDetay_tbl_urun" FromRole="tbl_sepetDetay" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_siparis">
+    <Key>
+      <PropertyRef Name="siparis_ID" />
+    </Key>
+    <Property Name="siparis_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kullanici_ID" Type="Int32" Nullable="false" />
+    <Property Name="siparisDurum_ID" Type="Int32" Nullable="false" />
+    <Property Name="toplam_tutar" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="teslimat_adresi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="siparis_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="tbl_fatura" Relationship="Self.FK_tbl_fatura_tbl_siparis" FromRole="tbl_siparis" ToRole="tbl_fatura" />
+    <NavigationProperty Name="tbl_kullanici" Relationship="Self.FK_tbl_siparis_tbl_kullanici" FromRole="tbl_siparis" ToRole="tbl_kullanici" />
+    <NavigationProperty Name="tbl_siparisDurum" Relationship="Self.FK_tbl_siparis_tbl_siparisDurum" FromRole="tbl_siparis" ToRole="tbl_siparisDurum" />
+    <NavigationProperty Name="tbl_siparisDetay" Relationship="Self.FK_tbl_siparisDetay_tbl_siparis" FromRole="tbl_siparis" ToRole="tbl_siparisDetay" />
+  </EntityType>
+  <EntityType Name="tbl_siparisDetay">
+    <Key>
+      <PropertyRef Name="siparisDetay_ID" />
+    </Key>
+    <Property Name="siparisDetay_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="siparis_ID" Type="Int32" Nullable="false" />
+    <Property Name="urun_ID" Type="Int32" Nullable="false" />
+    <Property Name="adet" Type="Byte" Nullable="false" />
+    <Property Name="birim_fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="toplam_fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <NavigationProperty Name="tbl_siparis" Relationship="Self.FK_tbl_siparisDetay_tbl_siparis" FromRole="tbl_siparisDetay" ToRole="tbl_siparis" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_siparisDetay_tbl_urun" FromRole="tbl_siparisDetay" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_siparisDurum">
+    <Key>
+      <PropertyRef Name="siparisDurum_ID" />
+    </Key>
+    <Property Name="siparisDurum_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="durum_adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_siparis" Relationship="Self.FK_tbl_siparis_tbl_siparisDurum" FromRole="tbl_siparisDurum" ToRole="tbl_siparis" />
+  </EntityType>
+  <EntityType Name="tbl_tedarikci">
+    <Key>
+      <PropertyRef Name="tedarikci_ID" />
+    </Key>
+    <Property Name="tedarikci_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="tedarikci_adi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="telefon" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="adres" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="tbl_tedarikSiparisleri" Relationship="Self.FK_tbl_tedarikSiparisleri_tbl_tedarikci" FromRole="tbl_tedarikci" ToRole="tbl_tedarikSiparisleri" />
+  </EntityType>
+  <EntityType Name="tbl_tedarikSiparisDetay">
+    <Key>
+      <PropertyRef Name="tedarikSiparisDetay_ID" />
+    </Key>
+    <Property Name="tedarikSiparisDetay_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="tedarikSiparis_ID" Type="Int32" Nullable="false" />
+    <Property Name="urun_ID" Type="Int32" Nullable="false" />
+    <Property Name="adet" Type="Byte" Nullable="false" />
+    <Property Name="birim_maliyet" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="toplam_maliyet" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <NavigationProperty Name="tbl_tedarikSiparisleri" Relationship="Self.FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri" FromRole="tbl_tedarikSiparisDetay" ToRole="tbl_tedarikSiparisleri" />
+    <NavigationProperty Name="tbl_urun" Relationship="Self.FK_tbl_tedarikSiparisDetay_tbl_urun" FromRole="tbl_tedarikSiparisDetay" ToRole="tbl_urun" />
+  </EntityType>
+  <EntityType Name="tbl_tedarikSiparisleri">
+    <Key>
+      <PropertyRef Name="tedarikSiparis_ID" />
+    </Key>
+    <Property Name="tedarikSiparis_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="tedarikci_ID" Type="Int32" Nullable="false" />
+    <Property Name="toplam_tutar" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="siparis_tarihi" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="tbl_tedarikci" Relationship="Self.FK_tbl_tedarikSiparisleri_tbl_tedarikci" FromRole="tbl_tedarikSiparisleri" ToRole="tbl_tedarikci" />
+    <NavigationProperty Name="tbl_tedarikSiparisDetay" Relationship="Self.FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri" FromRole="tbl_tedarikSiparisleri" ToRole="tbl_tedarikSiparisDetay" />
+  </EntityType>
+  <EntityType Name="tbl_urun">
+    <Key>
+      <PropertyRef Name="urun_ID" />
+    </Key>
+    <Property Name="urun_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="kategori_ID" Type="Int32" Nullable="false" />
+    <Property Name="marka_ID" Type="Int32" Nullable="false" />
+    <Property Name="model_ID" Type="Int32" Nullable="false" />
+    <Property Name="urun_adi" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="aciklama" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="mevcut_stok" Type="Byte" Nullable="false" />
+    <Property Name="fiyat" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="gorsel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="oneCikan_mi" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="tbl_kategori" Relationship="Self.FK_tbl_urun_tbl_kategori" FromRole="tbl_urun" ToRole="tbl_kategori" />
+    <NavigationProperty Name="tbl_marka" Relationship="Self.FK_tbl_urun_tbl_marka" FromRole="tbl_urun" ToRole="tbl_marka" />
+    <NavigationProperty Name="tbl_model" Relationship="Self.FK_tbl_urun_tbl_model" FromRole="tbl_urun" ToRole="tbl_model" />
+    <NavigationProperty Name="tbl_sepetDetay" Relationship="Self.FK_tbl_sepetDetay_tbl_urun" FromRole="tbl_urun" ToRole="tbl_sepetDetay" />
+    <NavigationProperty Name="tbl_siparisDetay" Relationship="Self.FK_tbl_siparisDetay_tbl_urun" FromRole="tbl_urun" ToRole="tbl_siparisDetay" />
+    <NavigationProperty Name="tbl_tedarikSiparisDetay" Relationship="Self.FK_tbl_tedarikSiparisDetay_tbl_urun" FromRole="tbl_urun" ToRole="tbl_tedarikSiparisDetay" />
+    <Property Name="aktif_mi" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_tbl_fatura_tbl_siparis">
+    <End Role="tbl_siparis" Type="Self.tbl_siparis" Multiplicity="1" />
+    <End Role="tbl_fatura" Type="Self.tbl_fatura" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_siparis">
+        <PropertyRef Name="siparis_ID" />
+      </Principal>
+      <Dependent Role="tbl_fatura">
+        <PropertyRef Name="siparis_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_iletisim_tbl_kullanici">
+    <End Role="tbl_kullanici" Type="Self.tbl_kullanici" Multiplicity="1" />
+    <End Role="tbl_iletisim" Type="Self.tbl_iletisim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_kullanici">
+        <PropertyRef Name="kullanici_ID" />
+      </Principal>
+      <Dependent Role="tbl_iletisim">
+        <PropertyRef Name="kullanici_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_urun_tbl_kategori">
+    <End Role="tbl_kategori" Type="Self.tbl_kategori" Multiplicity="1" />
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_kategori">
+        <PropertyRef Name="kategori_ID" />
+      </Principal>
+      <Dependent Role="tbl_urun">
+        <PropertyRef Name="kategori_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_kullanici_tbl_rol">
+    <End Role="tbl_rol" Type="Self.tbl_rol" Multiplicity="1" />
+    <End Role="tbl_kullanici" Type="Self.tbl_kullanici" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_rol">
+        <PropertyRef Name="rol_ID" />
+      </Principal>
+      <Dependent Role="tbl_kullanici">
+        <PropertyRef Name="rol_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_sepet_tbl_kullanici">
+    <End Role="tbl_kullanici" Type="Self.tbl_kullanici" Multiplicity="1" />
+    <End Role="tbl_sepet" Type="Self.tbl_sepet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_kullanici">
+        <PropertyRef Name="kullanici_ID" />
+      </Principal>
+      <Dependent Role="tbl_sepet">
+        <PropertyRef Name="kullanici_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_siparis_tbl_kullanici">
+    <End Role="tbl_kullanici" Type="Self.tbl_kullanici" Multiplicity="1" />
+    <End Role="tbl_siparis" Type="Self.tbl_siparis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_kullanici">
+        <PropertyRef Name="kullanici_ID" />
+      </Principal>
+      <Dependent Role="tbl_siparis">
+        <PropertyRef Name="kullanici_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_model_tbl_marka">
+    <End Role="tbl_marka" Type="Self.tbl_marka" Multiplicity="1" />
+    <End Role="tbl_model" Type="Self.tbl_model" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_marka">
+        <PropertyRef Name="marka_ID" />
+      </Principal>
+      <Dependent Role="tbl_model">
+        <PropertyRef Name="marka_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_urun_tbl_marka">
+    <End Role="tbl_marka" Type="Self.tbl_marka" Multiplicity="1" />
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_marka">
+        <PropertyRef Name="marka_ID" />
+      </Principal>
+      <Dependent Role="tbl_urun">
+        <PropertyRef Name="marka_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_urun_tbl_model">
+    <End Role="tbl_model" Type="Self.tbl_model" Multiplicity="1" />
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_model">
+        <PropertyRef Name="model_ID" />
+      </Principal>
+      <Dependent Role="tbl_urun">
+        <PropertyRef Name="model_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_sepetDetay_tbl_sepet">
+    <End Role="tbl_sepet" Type="Self.tbl_sepet" Multiplicity="1" />
+    <End Role="tbl_sepetDetay" Type="Self.tbl_sepetDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_sepet">
+        <PropertyRef Name="sepet_ID" />
+      </Principal>
+      <Dependent Role="tbl_sepetDetay">
+        <PropertyRef Name="sepet_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_sepetDetay_tbl_urun">
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="1" />
+    <End Role="tbl_sepetDetay" Type="Self.tbl_sepetDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_urun">
+        <PropertyRef Name="urun_ID" />
+      </Principal>
+      <Dependent Role="tbl_sepetDetay">
+        <PropertyRef Name="urun_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_siparis_tbl_siparisDurum">
+    <End Role="tbl_siparisDurum" Type="Self.tbl_siparisDurum" Multiplicity="1" />
+    <End Role="tbl_siparis" Type="Self.tbl_siparis" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_siparisDurum">
+        <PropertyRef Name="siparisDurum_ID" />
+      </Principal>
+      <Dependent Role="tbl_siparis">
+        <PropertyRef Name="siparisDurum_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_siparisDetay_tbl_siparis">
+    <End Role="tbl_siparis" Type="Self.tbl_siparis" Multiplicity="1" />
+    <End Role="tbl_siparisDetay" Type="Self.tbl_siparisDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_siparis">
+        <PropertyRef Name="siparis_ID" />
+      </Principal>
+      <Dependent Role="tbl_siparisDetay">
+        <PropertyRef Name="siparis_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_siparisDetay_tbl_urun">
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="1" />
+    <End Role="tbl_siparisDetay" Type="Self.tbl_siparisDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_urun">
+        <PropertyRef Name="urun_ID" />
+      </Principal>
+      <Dependent Role="tbl_siparisDetay">
+        <PropertyRef Name="urun_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_tedarikSiparisleri_tbl_tedarikci">
+    <End Role="tbl_tedarikci" Type="Self.tbl_tedarikci" Multiplicity="1" />
+    <End Role="tbl_tedarikSiparisleri" Type="Self.tbl_tedarikSiparisleri" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_tedarikci">
+        <PropertyRef Name="tedarikci_ID" />
+      </Principal>
+      <Dependent Role="tbl_tedarikSiparisleri">
+        <PropertyRef Name="tedarikci_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri">
+    <End Role="tbl_tedarikSiparisleri" Type="Self.tbl_tedarikSiparisleri" Multiplicity="1" />
+    <End Role="tbl_tedarikSiparisDetay" Type="Self.tbl_tedarikSiparisDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_tedarikSiparisleri">
+        <PropertyRef Name="tedarikSiparis_ID" />
+      </Principal>
+      <Dependent Role="tbl_tedarikSiparisDetay">
+        <PropertyRef Name="tedarikSiparis_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tbl_tedarikSiparisDetay_tbl_urun">
+    <End Role="tbl_urun" Type="Self.tbl_urun" Multiplicity="1" />
+    <End Role="tbl_tedarikSiparisDetay" Type="Self.tbl_tedarikSiparisDetay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tbl_urun">
+        <PropertyRef Name="urun_ID" />
+      </Principal>
+      <Dependent Role="tbl_tedarikSiparisDetay">
+        <PropertyRef Name="urun_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ETicaretEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tbl_fatura" EntityType="Self.tbl_fatura" />
+    <EntitySet Name="tbl_iletisim" EntityType="Self.tbl_iletisim" />
+    <EntitySet Name="tbl_kategori" EntityType="Self.tbl_kategori" />
+    <EntitySet Name="tbl_kullanici" EntityType="Self.tbl_kullanici" />
+    <EntitySet Name="tbl_marka" EntityType="Self.tbl_marka" />
+    <EntitySet Name="tbl_model" EntityType="Self.tbl_model" />
+    <EntitySet Name="tbl_rol" EntityType="Self.tbl_rol" />
+    <EntitySet Name="tbl_sepet" EntityType="Self.tbl_sepet" />
+    <EntitySet Name="tbl_sepetDetay" EntityType="Self.tbl_sepetDetay" />
+    <EntitySet Name="tbl_siparis" EntityType="Self.tbl_siparis" />
+    <EntitySet Name="tbl_siparisDetay" EntityType="Self.tbl_siparisDetay" />
+    <EntitySet Name="tbl_siparisDurum" EntityType="Self.tbl_siparisDurum" />
+    <EntitySet Name="tbl_tedarikci" EntityType="Self.tbl_tedarikci" />
+    <EntitySet Name="tbl_tedarikSiparisDetay" EntityType="Self.tbl_tedarikSiparisDetay" />
+    <EntitySet Name="tbl_tedarikSiparisleri" EntityType="Self.tbl_tedarikSiparisleri" />
+    <EntitySet Name="tbl_urun" EntityType="Self.tbl_urun" />
+    <AssociationSet Name="FK_tbl_fatura_tbl_siparis" Association="Self.FK_tbl_fatura_tbl_siparis">
+      <End Role="tbl_siparis" EntitySet="tbl_siparis" />
+      <End Role="tbl_fatura" EntitySet="tbl_fatura" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_iletisim_tbl_kullanici" Association="Self.FK_tbl_iletisim_tbl_kullanici">
+      <End Role="tbl_kullanici" EntitySet="tbl_kullanici" />
+      <End Role="tbl_iletisim" EntitySet="tbl_iletisim" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_urun_tbl_kategori" Association="Self.FK_tbl_urun_tbl_kategori">
+      <End Role="tbl_kategori" EntitySet="tbl_kategori" />
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_kullanici_tbl_rol" Association="Self.FK_tbl_kullanici_tbl_rol">
+      <End Role="tbl_rol" EntitySet="tbl_rol" />
+      <End Role="tbl_kullanici" EntitySet="tbl_kullanici" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_sepet_tbl_kullanici" Association="Self.FK_tbl_sepet_tbl_kullanici">
+      <End Role="tbl_kullanici" EntitySet="tbl_kullanici" />
+      <End Role="tbl_sepet" EntitySet="tbl_sepet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_siparis_tbl_kullanici" Association="Self.FK_tbl_siparis_tbl_kullanici">
+      <End Role="tbl_kullanici" EntitySet="tbl_kullanici" />
+      <End Role="tbl_siparis" EntitySet="tbl_siparis" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_model_tbl_marka" Association="Self.FK_tbl_model_tbl_marka">
+      <End Role="tbl_marka" EntitySet="tbl_marka" />
+      <End Role="tbl_model" EntitySet="tbl_model" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_urun_tbl_marka" Association="Self.FK_tbl_urun_tbl_marka">
+      <End Role="tbl_marka" EntitySet="tbl_marka" />
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_urun_tbl_model" Association="Self.FK_tbl_urun_tbl_model">
+      <End Role="tbl_model" EntitySet="tbl_model" />
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_sepetDetay_tbl_sepet" Association="Self.FK_tbl_sepetDetay_tbl_sepet">
+      <End Role="tbl_sepet" EntitySet="tbl_sepet" />
+      <End Role="tbl_sepetDetay" EntitySet="tbl_sepetDetay" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_sepetDetay_tbl_urun" Association="Self.FK_tbl_sepetDetay_tbl_urun">
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+      <End Role="tbl_sepetDetay" EntitySet="tbl_sepetDetay" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_siparis_tbl_siparisDurum" Association="Self.FK_tbl_siparis_tbl_siparisDurum">
+      <End Role="tbl_siparisDurum" EntitySet="tbl_siparisDurum" />
+      <End Role="tbl_siparis" EntitySet="tbl_siparis" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_siparisDetay_tbl_siparis" Association="Self.FK_tbl_siparisDetay_tbl_siparis">
+      <End Role="tbl_siparis" EntitySet="tbl_siparis" />
+      <End Role="tbl_siparisDetay" EntitySet="tbl_siparisDetay" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_siparisDetay_tbl_urun" Association="Self.FK_tbl_siparisDetay_tbl_urun">
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+      <End Role="tbl_siparisDetay" EntitySet="tbl_siparisDetay" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_tedarikSiparisleri_tbl_tedarikci" Association="Self.FK_tbl_tedarikSiparisleri_tbl_tedarikci">
+      <End Role="tbl_tedarikci" EntitySet="tbl_tedarikci" />
+      <End Role="tbl_tedarikSiparisleri" EntitySet="tbl_tedarikSiparisleri" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri" Association="Self.FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri">
+      <End Role="tbl_tedarikSiparisleri" EntitySet="tbl_tedarikSiparisleri" />
+      <End Role="tbl_tedarikSiparisDetay" EntitySet="tbl_tedarikSiparisDetay" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tbl_tedarikSiparisDetay_tbl_urun" Association="Self.FK_tbl_tedarikSiparisDetay_tbl_urun">
+      <End Role="tbl_urun" EntitySet="tbl_urun" />
+      <End Role="tbl_tedarikSiparisDetay" EntitySet="tbl_tedarikSiparisDetay" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c5287e07b0aa4617b4db0ed39dd84b7b" Name="Diagram1" ZoomLevel="73">
+        <EntityTypeShape EntityType="Model.tbl_fatura" Width="1.5" PointX="7.5" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_iletisim" Width="1.5" PointX="8.875" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_kategori" Width="1.5" PointX="3" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_kullanici" Width="1.5" PointX="3" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_marka" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_model" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_rol" Width="1.5" PointX="0.75" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_sepet" Width="1.5" PointX="8.25" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_sepetDetay" Width="1.5" PointX="10.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_siparis" Width="1.5" PointX="5.25" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_siparisDetay" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_siparisDurum" Width="1.5" PointX="3" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_tedarikci" Width="1.5" PointX="3.125" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_tedarikSiparisDetay" Width="1.5" PointX="7.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_tedarikSiparisleri" Width="1.5" PointX="5.375" PointY="16.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.tbl_urun" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_tbl_fatura_tbl_siparis" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_iletisim_tbl_kullanici" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_urun_tbl_kategori" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_kullanici_tbl_rol" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_sepet_tbl_kullanici" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_siparis_tbl_kullanici" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_model_tbl_marka" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_urun_tbl_marka" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_urun_tbl_model" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_sepetDetay_tbl_sepet" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_sepetDetay_tbl_urun" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_siparis_tbl_siparisDurum" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_siparisDetay_tbl_siparis" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_siparisDetay_tbl_urun" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_tedarikSiparisleri_tbl_tedarikci" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_tedarikSiparisDetay_tbl_tedarikSiparisleri" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_tbl_tedarikSiparisDetay_tbl_urun" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

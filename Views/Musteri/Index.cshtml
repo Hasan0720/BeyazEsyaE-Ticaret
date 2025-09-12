@@ -1,0 +1,184 @@
+﻿@model BeyazEsyaE_Ticaret.Models.AnaSayfaViewModel
+@{
+    ViewBag.Title = "Ana Sayfa";
+    Layout = "~/Views/Shared/_MusteriLayout.cshtml";
+}
+
+<!-- Öne çıkanlar listesi -->
+<h3 class="mb-3">Öne Çıkanlar</h3>
+<div id="oneCikanCarousel" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row">
+                @if (Model.OneCikanlar != null && Model.OneCikanlar.Any())
+                {
+                    foreach (var urun in Model.OneCikanlar)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card h-100 shadow-sm mx-2 product-card">
+                                <img src="@urun.gorsel" alt="@urun.urun_adi" onclick="openLightbox(this)">
+                                <a href="@Url.Action("UrunDetay", "MusteriUrun", new { id = urun.urun_ID })" class="text-decoration-none text-dark">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@urun.urun_adi</h5>
+                                        <p class="card-text">@urun.tbl_marka.marka_adi - @urun.tbl_model.model_adi</p>
+                                        <p class="card-text">@String.Format("₺{0:N2}", urun.fiyat)</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info text-center m-3">
+                            Bu bölümde listelenecek ürün bulunmuyor.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev " type="button" data-bs-target="#oneCikanCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next " type="button" data-bs-target="#oneCikanCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Çok satanlar listesi -->
+<h3 class="mb-3">Çok Satanlar</h3>
+<div id="cokSatanCarousel" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row">
+                @if (Model.CokSatanlar != null && Model.CokSatanlar.Any())
+                {
+                    foreach (var urun in Model.CokSatanlar)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card h-100 shadow-sm mx-2 product-card">
+                                <img src="@urun.gorsel" alt="@urun.urun_adi" onclick="openLightbox(this)">
+                                <a href="@Url.Action("UrunDetay", "MusteriUrun", new { id = urun.urun_ID })" class="text-decoration-none text-dark">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@urun.urun_adi</h5>
+                                        <p class="card-text">@urun.tbl_marka.marka_adi - @urun.tbl_model.model_adi</p>
+                                        <p class="card-text">@String.Format("₺{0:N2}", urun.fiyat)</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info text-center m-3">
+                            Bu bölümde listelenecek ürün bulunmuyor.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev " type="button" data-bs-target="#cokSatanCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next " type="button" data-bs-target="#cokSatanCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Stokları tükenmek züere olanlar listesi -->
+<h3 class="mb-3">Stokları Tükenmek Üzere Olanlar</h3>
+<div id="dusukStokCarousel" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row">
+                @if (Model.StokAzalanlar != null && Model.StokAzalanlar.Any())
+                {
+                    foreach (var urun in Model.StokAzalanlar)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card h-100 shadow-sm mx-2 product-card">
+                                <img src="@urun.gorsel" alt="@urun.urun_adi" onclick="openLightbox(this)">
+                                <a href="@Url.Action("UrunDetay", "MusteriUrun", new { id = urun.urun_ID })" class="text-decoration-none text-dark">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@urun.urun_adi</h5>
+                                        <p class="card-text">@urun.tbl_marka.marka_adi - @urun.tbl_model.model_adi</p>
+                                        <p class="card-text text-danger fw-bold">Kalan stok: @urun.mevcut_stok</p>
+                                        <p class="card-text">@String.Format("₺{0:N2}", urun.fiyat)</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info text-center m-3">
+                            Bu bölümde listelenecek ürün bulunmuyor.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev " type="button" data-bs-target="#dusukStokCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next " type="button" data-bs-target="#dusukStokCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Yeni gelenler listesi -->
+<h3 class="mb-3">Yeni Gelenler</h3>
+<div id="yeniGelenCarousel" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="row">
+                @if (Model.YeniGelenler != null && Model.YeniGelenler.Any())
+                {
+                    foreach (var urun in Model.YeniGelenler)
+                    {
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="card h-100 shadow-sm mx-2 product-card">
+                                <img src="@urun.gorsel" alt="@urun.urun_adi" onclick="openLightbox(this)">
+                                <a href="@Url.Action("UrunDetay", "MusteriUrun", new { id = urun.urun_ID })" class="text-decoration-none text-dark">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@urun.urun_adi</h5>
+                                        <p class="card-text">@urun.tbl_marka.marka_adi - @urun.tbl_model.model_adi</p>
+                                        <p class="card-text">@String.Format("₺{0:N2}", urun.fiyat)</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info text-center m-3">
+                            Bu bölümde listelenecek ürün bulunmuyor.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev " type="button" data-bs-target="#yeniGelenCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next " type="button" data-bs-target="#yeniGelenCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Lightbox HTML -->
+<div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" />
+</div>
